@@ -1,0 +1,98 @@
+{
+    "/": [
+        {
+            "file_name": "webpack.config.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\webpack.config.js"
+        }
+    ],
+    "public": [],
+    "public\\dist": [],
+    "src": [
+        {
+            "file_name": "App.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\App.js"
+        },
+        {
+            "file_name": "index.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\index.js"
+        },
+        {
+            "file_name": "store.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\store.js"
+        }
+    ],
+    "src\\actions": [
+        {
+            "file_name": "weatherStation.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\actions\\weatherStation.js"
+        }
+    ],
+    "src\\components": [
+        {
+            "file_name": "Dashboard.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\components\\Dashboard.js"
+        },
+        {
+            "file_name": "DetailedInfo.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\components\\DetailedInfo.js"
+        },
+        {
+            "file_name": "ForecastTiles.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\components\\ForecastTiles.js"
+        },
+        {
+            "file_name": "WeatherForecast.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\components\\WeatherForecast.js"
+        }
+    ],
+    "src\\constants": [
+        {
+            "file_name": "ActionTypes.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\constants\\ActionTypes.js"
+        },
+        {
+            "file_name": "generalConstants.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\constants\\generalConstants.js"
+        }
+    ],
+    "src\\reducers": [
+        {
+            "file_name": "index.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\reducers\\index.js"
+        },
+        {
+            "file_name": "weatherStation.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\reducers\\weatherStation.js"
+        }
+    ],
+    "src\\styles": [],
+    "src\\test": [
+        {
+            "file_name": "jestSetup.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\test\\jestSetup.js"
+        }
+    ],
+    "src\\test\\__tests__": [
+        {
+            "file_name": "dashboard.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\test\\__tests__\\dashboard.js"
+        },
+        {
+            "file_name": "forecastTiles.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\test\\__tests__\\forecastTiles.js"
+        },
+        {
+            "file_name": "testAsyncActions.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\test\\__tests__\\testAsyncActions.js"
+        },
+        {
+            "file_name": "testReducers.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\test\\__tests__\\testReducers.js"
+        },
+        {
+            "file_name": "weatherForecast.js",
+            "file_path": "./testcodebases/react-weather-forecast-master\\src\\test\\__tests__\\weatherForecast.js"
+        }
+    ],
+    "src\\test\\__tests__\\data": []
+}
