@@ -1,0 +1,1978 @@
+[
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\webpack.config.js",
+        "imports": [],
+        "exports": [],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "require",
+                "content": "require(\"path\")"
+            },
+            {
+                "function": "require",
+                "content": "require(\"extract-text-webpack-plugin\")"
+            },
+            {
+                "function": "require",
+                "content": "require(\"webpack\")"
+            },
+            {
+                "function": "path.resolve",
+                "content": "path.resolve(__dirname, \"./public/dist\")"
+            },
+            {
+                "function": "ExtractTextPlugin.extract",
+                "content": "ExtractTextPlugin.extract([\"css-loader\", \"sass-loader\"])"
+            },
+            {
+                "function": "JSON.stringify",
+                "content": "JSON.stringify(\"production\")"
+            }
+        ],
+        "arrow_functions": [],
+        "jsx_elements": [],
+        "imports_content": [],
+        "exports_content": [],
+        "functions_content": [],
+        "function_calls_content": [
+            "require(\"path\")",
+            "require(\"extract-text-webpack-plugin\")",
+            "require(\"webpack\")",
+            "path.resolve(__dirname, \"./public/dist\")",
+            "ExtractTextPlugin.extract([\"css-loader\", \"sass-loader\"])",
+            "JSON.stringify(\"production\")"
+        ],
+        "arrow_functions_content": [],
+        "jsx_content": [],
+        "code_content": "const path = require(\"path\");\nconst ExtractTextPlugin = require(\"extract-text-webpack-plugin\");\nconst webpack = require(\"webpack\");\n\nmodule.exports = {\n  entry: [\"./src/index.js\", \"./src/styles/main.scss\"],\n  output: {\n    filename: \"bundle.js\",\n    path: path.resolve(__dirname, \"./public/dist\")\n  },\n  module: {\n    rules: [\n      {\n        test: /\\.scss/,\n        loader: ExtractTextPlugin.extract([\"css-loader\", \"sass-loader\"])\n      },\n      {\n        test: /\\.js$/,\n        exclude: /node_modules/,\n        loaders: \"eslint-loader\",\n      },\n      {\n        test: /\\.js$/,\n        exclude: /node_modules/,\n        loaders: \"babel-loader\"\n      }\n    ]\n  },\n  devServer: {\n    contentBase: \"./public/\",\n    watchContentBase: true\n  },\n  plugins: [\n    new ExtractTextPlugin(\"bundle.css\"),\n    new webpack.DefinePlugin({\n      \"process.env.NODE_ENV\": JSON.stringify(\"production\")\n    }),\n    new webpack.optimize.UglifyJsPlugin()\n  ]\n};\n"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\App.js",
+        "imports": [
+            {
+                "module": "\"react\"",
+                "content": "import React, { Component } from \"react\";"
+            },
+            {
+                "module": "\"react-redux\"",
+                "content": "import { connect } from \"react-redux\";"
+            },
+            {
+                "module": "\"./actions/weatherStation\"",
+                "content": "import { fetchData } from \"./actions/weatherStation\";"
+            },
+            {
+                "module": "'./components/WeatherForecast'",
+                "content": "import WeatherForecast from './components/WeatherForecast';"
+            }
+        ],
+        "exports": [
+            {
+                "export": "class App extends Component {\n\n  // Fetches data by using geolocation. If the user blocks, or if the browser does not support the API, \n  // fallsback to default location of London\n  componentDidMount() {  \n    const detectLocation = new Promise((resolve,reject) => {\n      if (\"geolocation\" in navigator) {\n        navigator.geolocation.getCurrentPosition((position) => {\n          resolve(position.coords);\n        }, (error) => {\n          if(error.code === error.PERMISSION_DENIED) {\n            console.error(\"Error detecting location.\");\n          }\n        });\n      }\n    });\n\n    detectLocation.then((location) => {\n      this.props.dispatch(fetchData(location));\n    }).catch(() => {\n      this.props.dispatch(fetchData(\"london\"));\n    });\n  }\n\n  render() {\n    const { forecast } = this.props;\n\n    return (\n      forecast === null ? (\n        <div className=\"loading\">\n          <div className=\"spinner\"></div>\n        </div>\n      ) : (\n        <div>\n          <WeatherForecast data={forecast} />\n          <div className=\"fork\">\n            <a href=\"https://github.com/Gigacore/react-weather-forecast\" target=\"_blank\">Fork it on Github</a>\n          </div> \n        </div>\n      )\n    );\n  }\n}",
+                "content": "@connect(store => {  \n  return {\n    forecast: store.weatherStation.data\n  }\n})\nexport default class App extends Component {\n\n  // Fetches data by using geolocation. If the user blocks, or if the browser does not support the API, \n  // fallsback to default location of London\n  componentDidMount() {  \n    const detectLocation = new Promise((resolve,reject) => {\n      if (\"geolocation\" in navigator) {\n        navigator.geolocation.getCurrentPosition((position) => {\n          resolve(position.coords);\n        }, (error) => {\n          if(error.code === error.PERMISSION_DENIED) {\n            console.error(\"Error detecting location.\");\n          }\n        });\n      }\n    });\n\n    detectLocation.then((location) => {\n      this.props.dispatch(fetchData(location));\n    }).catch(() => {\n      this.props.dispatch(fetchData(\"london\"));\n    });\n  }\n\n  render() {\n    const { forecast } = this.props;\n\n    return (\n      forecast === null ? (\n        <div className=\"loading\">\n          <div className=\"spinner\"></div>\n        </div>\n      ) : (\n        <div>\n          <WeatherForecast data={forecast} />\n          <div className=\"fork\">\n            <a href=\"https://github.com/Gigacore/react-weather-forecast\" target=\"_blank\">Fork it on Github</a>\n          </div> \n        </div>\n      )\n    );\n  }\n}"
+            }
+        ],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "connect",
+                "content": "connect(store => {  \n  return {\n    forecast: store.weatherStation.data\n  }\n})"
+            },
+            {
+                "function": "navigator.geolocation.getCurrentPosition",
+                "content": "navigator.geolocation.getCurrentPosition((position) => {\n          resolve(position.coords);\n        }, (error) => {\n          if(error.code === error.PERMISSION_DENIED) {\n            console.error(\"Error detecting location.\");\n          }\n        })"
+            },
+            {
+                "function": "resolve",
+                "content": "resolve(position.coords)"
+            },
+            {
+                "function": "console.error",
+                "content": "console.error(\"Error detecting location.\")"
+            },
+            {
+                "function": "detectLocation.then((location) => {\n      this.props.dispatch(fetchData(location));\n    }).catch",
+                "content": "detectLocation.then((location) => {\n      this.props.dispatch(fetchData(location));\n    }).catch(() => {\n      this.props.dispatch(fetchData(\"london\"));\n    })"
+            },
+            {
+                "function": "detectLocation.then",
+                "content": "detectLocation.then((location) => {\n      this.props.dispatch(fetchData(location));\n    })"
+            },
+            {
+                "function": "this.props.dispatch",
+                "content": "this.props.dispatch(fetchData(location))"
+            },
+            {
+                "function": "fetchData",
+                "content": "fetchData(location)"
+            },
+            {
+                "function": "this.props.dispatch",
+                "content": "this.props.dispatch(fetchData(\"london\"))"
+            },
+            {
+                "function": "fetchData",
+                "content": "fetchData(\"london\")"
+            }
+        ],
+        "arrow_functions": [
+            {
+                "function": "arrow_function",
+                "content": "store => {  \n  return {\n    forecast: store.weatherStation.data\n  }\n}"
+            },
+            {
+                "function": "arrow_function",
+                "content": "(resolve,reject) => {\n      if (\"geolocation\" in navigator) {\n        navigator.geolocation.getCurrentPosition((position) => {\n          resolve(position.coords);\n        }, (error) => {\n          if(error.code === error.PERMISSION_DENIED) {\n            console.error(\"Error detecting location.\");\n          }\n        });\n      }\n    }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "(position) => {\n          resolve(position.coords);\n        }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "(error) => {\n          if(error.code === error.PERMISSION_DENIED) {\n            console.error(\"Error detecting location.\");\n          }\n        }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "(location) => {\n      this.props.dispatch(fetchData(location));\n    }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n      this.props.dispatch(fetchData(\"london\"));\n    }"
+            }
+        ],
+        "jsx_elements": [
+            {
+                "element": "jsx_element",
+                "content": "<div className=\"loading\">\n          <div className=\"spinner\"></div>\n        </div>"
+            },
+            {
+                "element": "jsx_element",
+                "content": "<div className=\"spinner\"></div>"
+            },
+            {
+                "element": "jsx_element",
+                "content": "<div>\n          <WeatherForecast data={forecast} />\n          <div className=\"fork\">\n            <a href=\"https://github.com/Gigacore/react-weather-forecast\" target=\"_blank\">Fork it on Github</a>\n          </div> \n        </div>"
+            },
+            {
+                "element": "jsx_element",
+                "content": "<div className=\"fork\">\n            <a href=\"https://github.com/Gigacore/react-weather-forecast\" target=\"_blank\">Fork it on Github</a>\n          </div>"
+            },
+            {
+                "element": "jsx_element",
+                "content": "<a href=\"https://github.com/Gigacore/react-weather-forecast\" target=\"_blank\">Fork it on Github</a>"
+            }
+        ],
+        "imports_content": [
+            "import React, { Component } from \"react\";",
+            "import { connect } from \"react-redux\";",
+            "import { fetchData } from \"./actions/weatherStation\";",
+            "import WeatherForecast from './components/WeatherForecast';"
+        ],
+        "exports_content": [
+            "@connect(store => {  \n  return {\n    forecast: store.weatherStation.data\n  }\n})\nexport default class App extends Component {\n\n  // Fetches data by using geolocation. If the user blocks, or if the browser does not support the API, \n  // fallsback to default location of London\n  componentDidMount() {  \n    const detectLocation = new Promise((resolve,reject) => {\n      if (\"geolocation\" in navigator) {\n        navigator.geolocation.getCurrentPosition((position) => {\n          resolve(position.coords);\n        }, (error) => {\n          if(error.code === error.PERMISSION_DENIED) {\n            console.error(\"Error detecting location.\");\n          }\n        });\n      }\n    });\n\n    detectLocation.then((location) => {\n      this.props.dispatch(fetchData(location));\n    }).catch(() => {\n      this.props.dispatch(fetchData(\"london\"));\n    });\n  }\n\n  render() {\n    const { forecast } = this.props;\n\n    return (\n      forecast === null ? (\n        <div className=\"loading\">\n          <div className=\"spinner\"></div>\n        </div>\n      ) : (\n        <div>\n          <WeatherForecast data={forecast} />\n          <div className=\"fork\">\n            <a href=\"https://github.com/Gigacore/react-weather-forecast\" target=\"_blank\">Fork it on Github</a>\n          </div> \n        </div>\n      )\n    );\n  }\n}"
+        ],
+        "functions_content": [],
+        "function_calls_content": [
+            "connect(store => {  \n  return {\n    forecast: store.weatherStation.data\n  }\n})",
+            "navigator.geolocation.getCurrentPosition((position) => {\n          resolve(position.coords);\n        }, (error) => {\n          if(error.code === error.PERMISSION_DENIED) {\n            console.error(\"Error detecting location.\");\n          }\n        })",
+            "resolve(position.coords)",
+            "console.error(\"Error detecting location.\")",
+            "detectLocation.then((location) => {\n      this.props.dispatch(fetchData(location));\n    }).catch(() => {\n      this.props.dispatch(fetchData(\"london\"));\n    })",
+            "detectLocation.then((location) => {\n      this.props.dispatch(fetchData(location));\n    })",
+            "this.props.dispatch(fetchData(location))",
+            "fetchData(location)",
+            "this.props.dispatch(fetchData(\"london\"))",
+            "fetchData(\"london\")"
+        ],
+        "arrow_functions_content": [
+            "store => {  \n  return {\n    forecast: store.weatherStation.data\n  }\n}",
+            "(resolve,reject) => {\n      if (\"geolocation\" in navigator) {\n        navigator.geolocation.getCurrentPosition((position) => {\n          resolve(position.coords);\n        }, (error) => {\n          if(error.code === error.PERMISSION_DENIED) {\n            console.error(\"Error detecting location.\");\n          }\n        });\n      }\n    }",
+            "(position) => {\n          resolve(position.coords);\n        }",
+            "(error) => {\n          if(error.code === error.PERMISSION_DENIED) {\n            console.error(\"Error detecting location.\");\n          }\n        }",
+            "(location) => {\n      this.props.dispatch(fetchData(location));\n    }",
+            "() => {\n      this.props.dispatch(fetchData(\"london\"));\n    }"
+        ],
+        "jsx_content": [
+            "<div className=\"loading\">\n          <div className=\"spinner\"></div>\n        </div>",
+            "<div className=\"spinner\"></div>",
+            "<div>\n          <WeatherForecast data={forecast} />\n          <div className=\"fork\">\n            <a href=\"https://github.com/Gigacore/react-weather-forecast\" target=\"_blank\">Fork it on Github</a>\n          </div> \n        </div>",
+            "<div className=\"fork\">\n            <a href=\"https://github.com/Gigacore/react-weather-forecast\" target=\"_blank\">Fork it on Github</a>\n          </div>",
+            "<a href=\"https://github.com/Gigacore/react-weather-forecast\" target=\"_blank\">Fork it on Github</a>"
+        ],
+        "code_content": "import React, { Component } from \"react\";\n\nimport { connect } from \"react-redux\";\nimport { fetchData } from \"./actions/weatherStation\";\n\nimport WeatherForecast from './components/WeatherForecast';\n\n@connect(store => {  \n  return {\n    forecast: store.weatherStation.data\n  }\n})\nexport default class App extends Component {\n\n  // Fetches data by using geolocation. If the user blocks, or if the browser does not support the API, \n  // fallsback to default location of London\n  componentDidMount() {  \n    const detectLocation = new Promise((resolve,reject) => {\n      if (\"geolocation\" in navigator) {\n        navigator.geolocation.getCurrentPosition((position) => {\n          resolve(position.coords);\n        }, (error) => {\n          if(error.code === error.PERMISSION_DENIED) {\n            console.error(\"Error detecting location.\");\n          }\n        });\n      }\n    });\n\n    detectLocation.then((location) => {\n      this.props.dispatch(fetchData(location));\n    }).catch(() => {\n      this.props.dispatch(fetchData(\"london\"));\n    });\n  }\n\n  render() {\n    const { forecast } = this.props;\n\n    return (\n      forecast === null ? (\n        <div className=\"loading\">\n          <div className=\"spinner\"></div>\n        </div>\n      ) : (\n        <div>\n          <WeatherForecast data={forecast} />\n          <div className=\"fork\">\n            <a href=\"https://github.com/Gigacore/react-weather-forecast\" target=\"_blank\">Fork it on Github</a>\n          </div> \n        </div>\n      )\n    );\n  }\n}"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\index.js",
+        "imports": [
+            {
+                "module": "\"react\"",
+                "content": "import React from \"react\";"
+            },
+            {
+                "module": "\"react-dom\"",
+                "content": "import { render } from \"react-dom\";"
+            },
+            {
+                "module": "\"react-redux\"",
+                "content": "import { Provider } from \"react-redux\";"
+            },
+            {
+                "module": "\"./App\"",
+                "content": "import App from \"./App\";"
+            },
+            {
+                "module": "\"./store\"",
+                "content": "import store from \"./store\";"
+            }
+        ],
+        "exports": [],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "render",
+                "content": "render(\n  <Provider store={store}>\n    <App />\n  </Provider>, document.getElementById(\"root\")\n)"
+            },
+            {
+                "function": "document.getElementById",
+                "content": "document.getElementById(\"root\")"
+            }
+        ],
+        "arrow_functions": [],
+        "jsx_elements": [
+            {
+                "element": "jsx_element",
+                "content": "<Provider store={store}>\n    <App />\n  </Provider>"
+            }
+        ],
+        "imports_content": [
+            "import React from \"react\";",
+            "import { render } from \"react-dom\";",
+            "import { Provider } from \"react-redux\";",
+            "import App from \"./App\";",
+            "import store from \"./store\";"
+        ],
+        "exports_content": [],
+        "functions_content": [],
+        "function_calls_content": [
+            "render(\n  <Provider store={store}>\n    <App />\n  </Provider>, document.getElementById(\"root\")\n)",
+            "document.getElementById(\"root\")"
+        ],
+        "arrow_functions_content": [],
+        "jsx_content": [
+            "<Provider store={store}>\n    <App />\n  </Provider>"
+        ],
+        "code_content": "/* global document */\n\nimport React from \"react\";\nimport { render } from \"react-dom\";\nimport { Provider } from \"react-redux\";\n\nimport App from \"./App\";\nimport store from \"./store\";\n\nrender(\n  <Provider store={store}>\n    <App />\n  </Provider>, document.getElementById(\"root\")\n);"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\store.js",
+        "imports": [
+            {
+                "module": "\"redux\"",
+                "content": "import { compose, applyMiddleware, createStore } from \"redux\";"
+            },
+            {
+                "module": "\"redux-logger\"",
+                "content": "import { createLogger } from \"redux-logger\";"
+            },
+            {
+                "module": "\"redux-thunk\"",
+                "content": "import thunk from \"redux-thunk\";"
+            },
+            {
+                "module": "\"./reducers\"",
+                "content": "import reducer from \"./reducers\";"
+            }
+        ],
+        "exports": [
+            {
+                "export": "store",
+                "content": "export default store;"
+            }
+        ],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "applyMiddleware",
+                "content": "applyMiddleware(thunk, createLogger())"
+            },
+            {
+                "function": "createLogger",
+                "content": "createLogger()"
+            },
+            {
+                "function": "compose(createStore)",
+                "content": "compose(createStore)(reducer, middleware)"
+            },
+            {
+                "function": "compose",
+                "content": "compose(createStore)"
+            }
+        ],
+        "arrow_functions": [],
+        "jsx_elements": [],
+        "imports_content": [
+            "import { compose, applyMiddleware, createStore } from \"redux\";",
+            "import { createLogger } from \"redux-logger\";",
+            "import thunk from \"redux-thunk\";",
+            "import reducer from \"./reducers\";"
+        ],
+        "exports_content": [
+            "export default store;"
+        ],
+        "functions_content": [],
+        "function_calls_content": [
+            "applyMiddleware(thunk, createLogger())",
+            "createLogger()",
+            "compose(createStore)(reducer, middleware)",
+            "compose(createStore)"
+        ],
+        "arrow_functions_content": [],
+        "jsx_content": [],
+        "code_content": "import { compose, applyMiddleware, createStore } from \"redux\";\nimport { createLogger } from \"redux-logger\";\n\nimport thunk from \"redux-thunk\";\nimport reducer from \"./reducers\";\n\nconst middleware = applyMiddleware(thunk, createLogger());\nlet store = compose(createStore)(reducer, middleware);\n\nexport default store;"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\actions\\weatherStation.js",
+        "imports": [
+            {
+                "module": "\"../constants/ActionTypes\"",
+                "content": "import { FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED } from \"../constants/ActionTypes\";"
+            },
+            {
+                "module": "\"../constants/generalConstants\"",
+                "content": "import { APP_ID } from \"../constants/generalConstants\";"
+            },
+            {
+                "module": "\"axios\"",
+                "content": "import axios from \"axios\";"
+            }
+        ],
+        "exports": [
+            {
+                "export": "const fetchData = (region) => (dispatch) => {\n  const { latitude, longitude } = region || {};\n\n  const getDataByCity = `https://api.openweathermap.org/data/2.5/forecast?q=${region}&units=metric&appid=${APP_ID}`;\n  const getDataByCoords = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${APP_ID}`;\n\n  let location = typeof(region) === \"object\" ? getDataByCoords : getDataByCity;\n\n  return axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })\n    .catch((err) => {\n      dispatch({type: FETCH_DATA_REJECTED, payload: err}); // Error handling\n    });\n};",
+                "content": "export const fetchData = (region) => (dispatch) => {\n  const { latitude, longitude } = region || {};\n\n  const getDataByCity = `https://api.openweathermap.org/data/2.5/forecast?q=${region}&units=metric&appid=${APP_ID}`;\n  const getDataByCoords = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${APP_ID}`;\n\n  let location = typeof(region) === \"object\" ? getDataByCoords : getDataByCity;\n\n  return axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })\n    .catch((err) => {\n      dispatch({type: FETCH_DATA_REJECTED, payload: err}); // Error handling\n    });\n};"
+            }
+        ],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })\n    .catch",
+                "content": "axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })\n    .catch((err) => {\n      dispatch({type: FETCH_DATA_REJECTED, payload: err}); // Error handling\n    })"
+            },
+            {
+                "function": "axios.get(location)\n    .then",
+                "content": "axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })"
+            },
+            {
+                "function": "axios.get",
+                "content": "axios.get(location)"
+            },
+            {
+                "function": "dispatch",
+                "content": "dispatch({type: FETCH_DATA_FULFILLED, payload: response.data})"
+            },
+            {
+                "function": "dispatch",
+                "content": "dispatch({type: FETCH_DATA_REJECTED, payload: err})"
+            }
+        ],
+        "arrow_functions": [
+            {
+                "function": "arrow_function",
+                "content": "(region) => (dispatch) => {\n  const { latitude, longitude } = region || {};\n\n  const getDataByCity = `https://api.openweathermap.org/data/2.5/forecast?q=${region}&units=metric&appid=${APP_ID}`;\n  const getDataByCoords = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${APP_ID}`;\n\n  let location = typeof(region) === \"object\" ? getDataByCoords : getDataByCity;\n\n  return axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })\n    .catch((err) => {\n      dispatch({type: FETCH_DATA_REJECTED, payload: err}); // Error handling\n    });\n}"
+            },
+            {
+                "function": "arrow_function",
+                "content": "(dispatch) => {\n  const { latitude, longitude } = region || {};\n\n  const getDataByCity = `https://api.openweathermap.org/data/2.5/forecast?q=${region}&units=metric&appid=${APP_ID}`;\n  const getDataByCoords = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${APP_ID}`;\n\n  let location = typeof(region) === \"object\" ? getDataByCoords : getDataByCity;\n\n  return axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })\n    .catch((err) => {\n      dispatch({type: FETCH_DATA_REJECTED, payload: err}); // Error handling\n    });\n}"
+            },
+            {
+                "function": "arrow_function",
+                "content": "(response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "(err) => {\n      dispatch({type: FETCH_DATA_REJECTED, payload: err}); // Error handling\n    }"
+            }
+        ],
+        "jsx_elements": [],
+        "imports_content": [
+            "import { FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED } from \"../constants/ActionTypes\";",
+            "import { APP_ID } from \"../constants/generalConstants\";",
+            "import axios from \"axios\";"
+        ],
+        "exports_content": [
+            "export const fetchData = (region) => (dispatch) => {\n  const { latitude, longitude } = region || {};\n\n  const getDataByCity = `https://api.openweathermap.org/data/2.5/forecast?q=${region}&units=metric&appid=${APP_ID}`;\n  const getDataByCoords = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${APP_ID}`;\n\n  let location = typeof(region) === \"object\" ? getDataByCoords : getDataByCity;\n\n  return axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })\n    .catch((err) => {\n      dispatch({type: FETCH_DATA_REJECTED, payload: err}); // Error handling\n    });\n};"
+        ],
+        "functions_content": [],
+        "function_calls_content": [
+            "axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })\n    .catch((err) => {\n      dispatch({type: FETCH_DATA_REJECTED, payload: err}); // Error handling\n    })",
+            "axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })",
+            "axios.get(location)",
+            "dispatch({type: FETCH_DATA_FULFILLED, payload: response.data})",
+            "dispatch({type: FETCH_DATA_REJECTED, payload: err})"
+        ],
+        "arrow_functions_content": [
+            "(region) => (dispatch) => {\n  const { latitude, longitude } = region || {};\n\n  const getDataByCity = `https://api.openweathermap.org/data/2.5/forecast?q=${region}&units=metric&appid=${APP_ID}`;\n  const getDataByCoords = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${APP_ID}`;\n\n  let location = typeof(region) === \"object\" ? getDataByCoords : getDataByCity;\n\n  return axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })\n    .catch((err) => {\n      dispatch({type: FETCH_DATA_REJECTED, payload: err}); // Error handling\n    });\n}",
+            "(dispatch) => {\n  const { latitude, longitude } = region || {};\n\n  const getDataByCity = `https://api.openweathermap.org/data/2.5/forecast?q=${region}&units=metric&appid=${APP_ID}`;\n  const getDataByCoords = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${APP_ID}`;\n\n  let location = typeof(region) === \"object\" ? getDataByCoords : getDataByCity;\n\n  return axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })\n    .catch((err) => {\n      dispatch({type: FETCH_DATA_REJECTED, payload: err}); // Error handling\n    });\n}",
+            "(response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    }",
+            "(err) => {\n      dispatch({type: FETCH_DATA_REJECTED, payload: err}); // Error handling\n    }"
+        ],
+        "jsx_content": [],
+        "code_content": "import { FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED } from \"../constants/ActionTypes\";\nimport { APP_ID } from \"../constants/generalConstants\";\n\nimport axios from \"axios\";\n\nexport const fetchData = (region) => (dispatch) => {\n  const { latitude, longitude } = region || {};\n\n  const getDataByCity = `https://api.openweathermap.org/data/2.5/forecast?q=${region}&units=metric&appid=${APP_ID}`;\n  const getDataByCoords = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${APP_ID}`;\n\n  let location = typeof(region) === \"object\" ? getDataByCoords : getDataByCity;\n\n  return axios.get(location)\n    .then((response) => {\n      dispatch({type: FETCH_DATA_FULFILLED, payload: response.data});\n    })\n    .catch((err) => {\n      dispatch({type: FETCH_DATA_REJECTED, payload: err}); // Error handling\n    });\n};"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\components\\Dashboard.js",
+        "imports": [
+            {
+                "module": "\"react\"",
+                "content": "import React, { Component } from \"react\";"
+            },
+            {
+                "module": "\"react-redux\"",
+                "content": "import { connect } from \"react-redux\";"
+            },
+            {
+                "module": "\"../actions/weatherStation\"",
+                "content": "import { fetchData } from \"../actions/weatherStation\";"
+            }
+        ],
+        "exports": [
+            {
+                "export": "class Dashboard extends Component {\n\n  _updateCity = () => {\n    const city = this.__cityInput.value;\n    city.length !== 0 ? this.props.dispatch(fetchData(city)) : null;\n  }\n\n  _onkeyPress = e => {\n    e.key === \"Enter\" ? this._updateCity() : null\n  }\n\n  render() {\n\n    const { city, status } = this.props;\n    const wrapperClass = (status === \"failed\") ? \"weather-dashboard invalid-city\" : \"weather-dashboard\";\n\n    return (\n      <div className={wrapperClass}>\n        <header>\n          <h1 className=\"heading\">5-Day Weather Forecast</h1>\n        </header>\n        <section className=\"controls\">\n          <div>\n            <input\n              type=\"text\"\n              className=\"city-input\"\n              id=\"city-name\"\n              ref={input => {\n                this.__cityInput = input;\n                return this.__cityInput;\n              }}\n              onKeyPress={this._onkeyPress}\n              placeholder={city}\n            />\n            <input\n              type=\"button\"\n              value=\"&gt;\"\n              className=\"search\"\n              onClick={this._updateCity}\n              id=\"change-city-btn\"\n            />\n          </div>\n        </section>\n        <span className=\"error\">Please enter valid city name!</span>\n      </div>\n    );\n  }\n}",
+                "content": "@connect((store) => {\n  return {\n    status: store.weatherStation.status\n  }\n})\nexport default class Dashboard extends Component {\n\n  _updateCity = () => {\n    const city = this.__cityInput.value;\n    city.length !== 0 ? this.props.dispatch(fetchData(city)) : null;\n  }\n\n  _onkeyPress = e => {\n    e.key === \"Enter\" ? this._updateCity() : null\n  }\n\n  render() {\n\n    const { city, status } = this.props;\n    const wrapperClass = (status === \"failed\") ? \"weather-dashboard invalid-city\" : \"weather-dashboard\";\n\n    return (\n      <div className={wrapperClass}>\n        <header>\n          <h1 className=\"heading\">5-Day Weather Forecast</h1>\n        </header>\n        <section className=\"controls\">\n          <div>\n            <input\n              type=\"text\"\n              className=\"city-input\"\n              id=\"city-name\"\n              ref={input => {\n                this.__cityInput = input;\n                return this.__cityInput;\n              }}\n              onKeyPress={this._onkeyPress}\n              placeholder={city}\n            />\n            <input\n              type=\"button\"\n              value=\"&gt;\"\n              className=\"search\"\n              onClick={this._updateCity}\n              id=\"change-city-btn\"\n            />\n          </div>\n        </section>\n        <span className=\"error\">Please enter valid city name!</span>\n      </div>\n    );\n  }\n}"
+            }
+        ],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "connect",
+                "content": "connect((store) => {\n  return {\n    status: store.weatherStation.status\n  }\n})"
+            },
+            {
+                "function": "this.props.dispatch",
+                "content": "this.props.dispatch(fetchData(city))"
+            },
+            {
+                "function": "fetchData",
+                "content": "fetchData(city)"
+            },
+            {
+                "function": "this._updateCity",
+                "content": "this._updateCity()"
+            }
+        ],
+        "arrow_functions": [
+            {
+                "function": "arrow_function",
+                "content": "(store) => {\n  return {\n    status: store.weatherStation.status\n  }\n}"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    const city = this.__cityInput.value;\n    city.length !== 0 ? this.props.dispatch(fetchData(city)) : null;\n  }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "e => {\n    e.key === \"Enter\" ? this._updateCity() : null\n  }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "input => {\n                this.__cityInput = input;\n                return this.__cityInput;\n              }"
+            }
+        ],
+        "jsx_elements": [
+            {
+                "element": "jsx_element",
+                "content": "<div className={wrapperClass}>\n        <header>\n          <h1 className=\"heading\">5-Day Weather Forecast</h1>\n        </header>\n        <section className=\"controls\">\n          <div>\n            <input\n              type=\"text\"\n              className=\"city-input\"\n              id=\"city-name\"\n              ref={input => {\n                this.__cityInput = input;\n                return this.__cityInput;\n              }}\n              onKeyPress={this._onkeyPress}\n              placeholder={city}\n            />\n            <input\n              type=\"button\"\n              value=\"&gt;\"\n              className=\"search\"\n              onClick={this._updateCity}\n              id=\"change-city-btn\"\n            />\n          </div>\n        </section>\n        <span className=\"error\">Please enter valid city name!</span>\n      </div>"
+            },
+            {
+                "element": "jsx_element",
+                "content": "<header>\n          <h1 className=\"heading\">5-Day Weather Forecast</h1>\n        </header>"
+            },
+            {
+                "element": "jsx_element",
+                "content": "<h1 className=\"heading\">5-Day Weather Forecast</h1>"
+            },
+            {
+                "element": "jsx_element",
+                "content": "<section className=\"controls\">\n          <div>\n            <input\n              type=\"text\"\n              className=\"city-input\"\n              id=\"city-name\"\n              ref={input => {\n                this.__cityInput = input;\n                return this.__cityInput;\n              }}\n              onKeyPress={this._onkeyPress}\n              placeholder={city}\n            />\n            <input\n              type=\"button\"\n              value=\"&gt;\"\n              className=\"search\"\n              onClick={this._updateCity}\n              id=\"change-city-btn\"\n            />\n          </div>\n        </section>"
+            },
+            {
+                "element": "jsx_element",
+                "content": "<div>\n            <input\n              type=\"text\"\n              className=\"city-input\"\n              id=\"city-name\"\n              ref={input => {\n                this.__cityInput = input;\n                return this.__cityInput;\n              }}\n              onKeyPress={this._onkeyPress}\n              placeholder={city}\n            />\n            <input\n              type=\"button\"\n              value=\"&gt;\"\n              className=\"search\"\n              onClick={this._updateCity}\n              id=\"change-city-btn\"\n            />\n          </div>"
+            },
+            {
+                "element": "jsx_element",
+                "content": "<span className=\"error\">Please enter valid city name!</span>"
+            }
+        ],
+        "imports_content": [
+            "import React, { Component } from \"react\";",
+            "import { connect } from \"react-redux\";",
+            "import { fetchData } from \"../actions/weatherStation\";"
+        ],
+        "exports_content": [
+            "@connect((store) => {\n  return {\n    status: store.weatherStation.status\n  }\n})\nexport default class Dashboard extends Component {\n\n  _updateCity = () => {\n    const city = this.__cityInput.value;\n    city.length !== 0 ? this.props.dispatch(fetchData(city)) : null;\n  }\n\n  _onkeyPress = e => {\n    e.key === \"Enter\" ? this._updateCity() : null\n  }\n\n  render() {\n\n    const { city, status } = this.props;\n    const wrapperClass = (status === \"failed\") ? \"weather-dashboard invalid-city\" : \"weather-dashboard\";\n\n    return (\n      <div className={wrapperClass}>\n        <header>\n          <h1 className=\"heading\">5-Day Weather Forecast</h1>\n        </header>\n        <section className=\"controls\">\n          <div>\n            <input\n              type=\"text\"\n              className=\"city-input\"\n              id=\"city-name\"\n              ref={input => {\n                this.__cityInput = input;\n                return this.__cityInput;\n              }}\n              onKeyPress={this._onkeyPress}\n              placeholder={city}\n            />\n            <input\n              type=\"button\"\n              value=\"&gt;\"\n              className=\"search\"\n              onClick={this._updateCity}\n              id=\"change-city-btn\"\n            />\n          </div>\n        </section>\n        <span className=\"error\">Please enter valid city name!</span>\n      </div>\n    );\n  }\n}"
+        ],
+        "functions_content": [],
+        "function_calls_content": [
+            "connect((store) => {\n  return {\n    status: store.weatherStation.status\n  }\n})",
+            "this.props.dispatch(fetchData(city))",
+            "fetchData(city)",
+            "this._updateCity()"
+        ],
+        "arrow_functions_content": [
+            "(store) => {\n  return {\n    status: store.weatherStation.status\n  }\n}",
+            "() => {\n    const city = this.__cityInput.value;\n    city.length !== 0 ? this.props.dispatch(fetchData(city)) : null;\n  }",
+            "e => {\n    e.key === \"Enter\" ? this._updateCity() : null\n  }",
+            "input => {\n                this.__cityInput = input;\n                return this.__cityInput;\n              }"
+        ],
+        "jsx_content": [
+            "<div className={wrapperClass}>\n        <header>\n          <h1 className=\"heading\">5-Day Weather Forecast</h1>\n        </header>\n        <section className=\"controls\">\n          <div>\n            <input\n              type=\"text\"\n              className=\"city-input\"\n              id=\"city-name\"\n              ref={input => {\n                this.__cityInput = input;\n                return this.__cityInput;\n              }}\n              onKeyPress={this._onkeyPress}\n              placeholder={city}\n            />\n            <input\n              type=\"button\"\n              value=\"&gt;\"\n              className=\"search\"\n              onClick={this._updateCity}\n              id=\"change-city-btn\"\n            />\n          </div>\n        </section>\n        <span className=\"error\">Please enter valid city name!</span>\n      </div>",
+            "<header>\n          <h1 className=\"heading\">5-Day Weather Forecast</h1>\n        </header>",
+            "<h1 className=\"heading\">5-Day Weather Forecast</h1>",
+            "<section className=\"controls\">\n          <div>\n            <input\n              type=\"text\"\n              className=\"city-input\"\n              id=\"city-name\"\n              ref={input => {\n                this.__cityInput = input;\n                return this.__cityInput;\n              }}\n              onKeyPress={this._onkeyPress}\n              placeholder={city}\n            />\n            <input\n              type=\"button\"\n              value=\"&gt;\"\n              className=\"search\"\n              onClick={this._updateCity}\n              id=\"change-city-btn\"\n            />\n          </div>\n        </section>",
+            "<div>\n            <input\n              type=\"text\"\n              className=\"city-input\"\n              id=\"city-name\"\n              ref={input => {\n                this.__cityInput = input;\n                return this.__cityInput;\n              }}\n              onKeyPress={this._onkeyPress}\n              placeholder={city}\n            />\n            <input\n              type=\"button\"\n              value=\"&gt;\"\n              className=\"search\"\n              onClick={this._updateCity}\n              id=\"change-city-btn\"\n            />\n          </div>",
+            "<span className=\"error\">Please enter valid city name!</span>"
+        ],
+        "code_content": "import React, { Component } from \"react\";\nimport { connect } from \"react-redux\";\nimport { fetchData } from \"../actions/weatherStation\";\n\n@connect((store) => {\n  return {\n    status: store.weatherStation.status\n  }\n})\nexport default class Dashboard extends Component {\n\n  _updateCity = () => {\n    const city = this.__cityInput.value;\n    city.length !== 0 ? this.props.dispatch(fetchData(city)) : null;\n  }\n\n  _onkeyPress = e => {\n    e.key === \"Enter\" ? this._updateCity() : null\n  }\n\n  render() {\n\n    const { city, status } = this.props;\n    const wrapperClass = (status === \"failed\") ? \"weather-dashboard invalid-city\" : \"weather-dashboard\";\n\n    return (\n      <div className={wrapperClass}>\n        <header>\n          <h1 className=\"heading\">5-Day Weather Forecast</h1>\n        </header>\n        <section className=\"controls\">\n          <div>\n            <input\n              type=\"text\"\n              className=\"city-input\"\n              id=\"city-name\"\n              ref={input => {\n                this.__cityInput = input;\n                return this.__cityInput;\n              }}\n              onKeyPress={this._onkeyPress}\n              placeholder={city}\n            />\n            <input\n              type=\"button\"\n              value=\"&gt;\"\n              className=\"search\"\n              onClick={this._updateCity}\n              id=\"change-city-btn\"\n            />\n          </div>\n        </section>\n        <span className=\"error\">Please enter valid city name!</span>\n      </div>\n    );\n  }\n}\n"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\components\\DetailedInfo.js",
+        "imports": [
+            {
+                "module": "\"react\"",
+                "content": "import React from \"react\";"
+            }
+        ],
+        "exports": [
+            {
+                "export": "DetailedInfo",
+                "content": "port default DetailedInfo;\n"
+            }
+        ],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "new Date(time).getHours",
+                "content": "new Date(time).getHours()"
+            },
+            {
+                "function": "new Date().getHours",
+                "content": "new Date().getHours()"
+            },
+            {
+                "function": "new Date(date).getDate",
+                "content": "new Date(date).getDate()"
+            },
+            {
+                "function": "new Date().getDate",
+                "content": "new Date().getDate()"
+            },
+            {
+                "function": "Math.round",
+                "content": "Math.round(item.main.temp)"
+            },
+            {
+                "function": "getHour",
+                "content": "tHour(item.dt * 1000)}:"
+            },
+            {
+                "function": "data.map",
+                "content": "ta.map((item, i) => (\n        (getHour(item.dt * 1000) > getHour() && getDate(item.dt * 1000) === getDate()) ? (\n          displayMoreInfo(item, i)\n         ) : getHour(item.dt * 1000) >= 5 && getHour(item.dt * 1000) <= 23 ? (\n            displayMoreInfo(item, i)\n         ) : null\n      ))}\n"
+            },
+            {
+                "function": "getHour",
+                "content": "tHour(item.dt * 1000) >"
+            },
+            {
+                "function": "getHour",
+                "content": "tHour() &"
+            },
+            {
+                "function": "getDate",
+                "content": "tDate(item.dt * 1000) ="
+            },
+            {
+                "function": "getDate",
+                "content": "tDate()) "
+            },
+            {
+                "function": "displayMoreInfo",
+                "content": "splayMoreInfo(item, i)\n "
+            },
+            {
+                "function": "getHour",
+                "content": "tHour(item.dt * 1000) >"
+            },
+            {
+                "function": "getHour",
+                "content": "tHour(item.dt * 1000) <"
+            },
+            {
+                "function": "displayMoreInfo",
+                "content": "splayMoreInfo(item, i)\n "
+            }
+        ],
+        "arrow_functions": [
+            {
+                "function": "arrow_function",
+                "content": "({ data }) => {\n\n  const getHour = time => time ? new Date(time).getHours() : new Date().getHours();\n  const getDate = date => date ? new Date(date).getDate() : new Date().getDate();\n\n  const displayMoreInfo = (item, i) => {\n    return (\n      <div className=\"hourly-info\" key={i}>\n        <div className=\"hour-temperature\">\n          {`${Math.round(item.main.temp)}\u00c2\u00b0C`}\n        </div>\n        <div className=\"hour-of-the-day\">\n          {`${getHour(item.dt * 1000)}:00`}\n        </div>\n      </div>\n    );\n  };\n\n  return (\n    <div className=\"hourly\">\n      {data.map((item, i) => (\n        (getHour(item.dt * 1000) > getHour() && getDate(item.dt * 1000) === getDate()) ? (\n          displayMoreInfo(item, i)\n         ) : getHour(item.dt * 1000) >= 5 && getHour(item.dt * 1000) <= 23 ? (\n            displayMoreInfo(item, i)\n         ) : null\n      ))}\n    </div>\n  );\n};\n"
+            },
+            {
+                "function": "arrow_function",
+                "content": "time => time ? new Date(time).getHours() : new Date().getHours()"
+            },
+            {
+                "function": "arrow_function",
+                "content": "date => date ? new Date(date).getDate() : new Date().getDate()"
+            },
+            {
+                "function": "arrow_function",
+                "content": "(item, i) => {\n    return (\n      <div className=\"hourly-info\" key={i}>\n        <div className=\"hour-temperature\">\n          {`${Math.round(item.main.temp)}\u00c2\u00b0C`}\n        </div>\n        <div className=\"hour-of-the-day\">\n          {`${getHour(item.dt * 1000)}:00`}\n        </div>\n      </div>\n    );\n  };\n"
+            },
+            {
+                "function": "arrow_function",
+                "content": "tem, i) => (\n        (getHour(item.dt * 1000) > getHour() && getDate(item.dt * 1000) === getDate()) ? (\n          displayMoreInfo(item, i)\n         ) : getHour(item.dt * 1000) >= 5 && getHour(item.dt * 1000) <= 23 ? (\n            displayMoreInfo(item, i)\n         ) : null\n      ))}"
+            }
+        ],
+        "jsx_elements": [
+            {
+                "element": "jsx_element",
+                "content": "<div className=\"hourly-info\" key={i}>\n        <div className=\"hour-temperature\">\n          {`${Math.round(item.main.temp)}\u00c2\u00b0C`}\n        </div>\n        <div className=\"hour-of-the-day\">\n          {`${getHour(item.dt * 1000)}:00`}\n        </div>\n      </div>\n "
+            },
+            {
+                "element": "jsx_element",
+                "content": "<div className=\"hour-temperature\">\n          {`${Math.round(item.main.temp)}\u00c2\u00b0C`}\n        </div>\n "
+            },
+            {
+                "element": "jsx_element",
+                "content": "iv className=\"hour-of-the-day\">\n          {`${getHour(item.dt * 1000)}:00`}\n        </div>\n "
+            },
+            {
+                "element": "jsx_element",
+                "content": "iv className=\"hourly\">\n      {data.map((item, i) => (\n        (getHour(item.dt * 1000) > getHour() && getDate(item.dt * 1000) === getDate()) ? (\n          displayMoreInfo(item, i)\n         ) : getHour(item.dt * 1000) >= 5 && getHour(item.dt * 1000) <= 23 ? (\n            displayMoreInfo(item, i)\n         ) : null\n      ))}\n    </div>\n "
+            }
+        ],
+        "imports_content": [
+            "import React from \"react\";"
+        ],
+        "exports_content": [
+            "port default DetailedInfo;\n"
+        ],
+        "functions_content": [],
+        "function_calls_content": [
+            "new Date(time).getHours()",
+            "new Date().getHours()",
+            "new Date(date).getDate()",
+            "new Date().getDate()",
+            "Math.round(item.main.temp)",
+            "tHour(item.dt * 1000)}:",
+            "ta.map((item, i) => (\n        (getHour(item.dt * 1000) > getHour() && getDate(item.dt * 1000) === getDate()) ? (\n          displayMoreInfo(item, i)\n         ) : getHour(item.dt * 1000) >= 5 && getHour(item.dt * 1000) <= 23 ? (\n            displayMoreInfo(item, i)\n         ) : null\n      ))}\n",
+            "tHour(item.dt * 1000) >",
+            "tHour() &",
+            "tDate(item.dt * 1000) =",
+            "tDate()) ",
+            "splayMoreInfo(item, i)\n ",
+            "tHour(item.dt * 1000) >",
+            "tHour(item.dt * 1000) <",
+            "splayMoreInfo(item, i)\n "
+        ],
+        "arrow_functions_content": [
+            "({ data }) => {\n\n  const getHour = time => time ? new Date(time).getHours() : new Date().getHours();\n  const getDate = date => date ? new Date(date).getDate() : new Date().getDate();\n\n  const displayMoreInfo = (item, i) => {\n    return (\n      <div className=\"hourly-info\" key={i}>\n        <div className=\"hour-temperature\">\n          {`${Math.round(item.main.temp)}\u00c2\u00b0C`}\n        </div>\n        <div className=\"hour-of-the-day\">\n          {`${getHour(item.dt * 1000)}:00`}\n        </div>\n      </div>\n    );\n  };\n\n  return (\n    <div className=\"hourly\">\n      {data.map((item, i) => (\n        (getHour(item.dt * 1000) > getHour() && getDate(item.dt * 1000) === getDate()) ? (\n          displayMoreInfo(item, i)\n         ) : getHour(item.dt * 1000) >= 5 && getHour(item.dt * 1000) <= 23 ? (\n            displayMoreInfo(item, i)\n         ) : null\n      ))}\n    </div>\n  );\n};\n",
+            "time => time ? new Date(time).getHours() : new Date().getHours()",
+            "date => date ? new Date(date).getDate() : new Date().getDate()",
+            "(item, i) => {\n    return (\n      <div className=\"hourly-info\" key={i}>\n        <div className=\"hour-temperature\">\n          {`${Math.round(item.main.temp)}\u00c2\u00b0C`}\n        </div>\n        <div className=\"hour-of-the-day\">\n          {`${getHour(item.dt * 1000)}:00`}\n        </div>\n      </div>\n    );\n  };\n",
+            "tem, i) => (\n        (getHour(item.dt * 1000) > getHour() && getDate(item.dt * 1000) === getDate()) ? (\n          displayMoreInfo(item, i)\n         ) : getHour(item.dt * 1000) >= 5 && getHour(item.dt * 1000) <= 23 ? (\n            displayMoreInfo(item, i)\n         ) : null\n      ))}"
+        ],
+        "jsx_content": [
+            "<div className=\"hourly-info\" key={i}>\n        <div className=\"hour-temperature\">\n          {`${Math.round(item.main.temp)}\u00c2\u00b0C`}\n        </div>\n        <div className=\"hour-of-the-day\">\n          {`${getHour(item.dt * 1000)}:00`}\n        </div>\n      </div>\n ",
+            "<div className=\"hour-temperature\">\n          {`${Math.round(item.main.temp)}\u00c2\u00b0C`}\n        </div>\n ",
+            "iv className=\"hour-of-the-day\">\n          {`${getHour(item.dt * 1000)}:00`}\n        </div>\n ",
+            "iv className=\"hourly\">\n      {data.map((item, i) => (\n        (getHour(item.dt * 1000) > getHour() && getDate(item.dt * 1000) === getDate()) ? (\n          displayMoreInfo(item, i)\n         ) : getHour(item.dt * 1000) >= 5 && getHour(item.dt * 1000) <= 23 ? (\n            displayMoreInfo(item, i)\n         ) : null\n      ))}\n    </div>\n "
+        ],
+        "code_content": "import React from \"react\";\n\nconst DetailedInfo = ({ data }) => {\n\n  const getHour = time => time ? new Date(time).getHours() : new Date().getHours();\n  const getDate = date => date ? new Date(date).getDate() : new Date().getDate();\n\n  const displayMoreInfo = (item, i) => {\n    return (\n      <div className=\"hourly-info\" key={i}>\n        <div className=\"hour-temperature\">\n          {`${Math.round(item.main.temp)}\u00c2\u00b0C`}\n        </div>\n        <div className=\"hour-of-the-day\">\n          {`${getHour(item.dt * 1000)}:00`}\n        </div>\n      </div>\n    );\n  };\n\n  return (\n    <div className=\"hourly\">\n      {data.map((item, i) => (\n        (getHour(item.dt * 1000) > getHour() && getDate(item.dt * 1000) === getDate()) ? (\n          displayMoreInfo(item, i)\n         ) : getHour(item.dt * 1000) >= 5 && getHour(item.dt * 1000) <= 23 ? (\n            displayMoreInfo(item, i)\n         ) : null\n      ))}\n    </div>\n  );\n};\n\nexport default DetailedInfo;\n"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\components\\ForecastTiles.js",
+        "imports": [
+            {
+                "module": "\"react\"",
+                "content": "import React, { Component } from \"react\";"
+            },
+            {
+                "module": "\"./DetailedInfo\"",
+                "content": "import DetailedInfo from \"./DetailedInfo\";"
+            }
+        ],
+        "exports": [
+            {
+                "export": "class ForecastTiles extends Component {\n\n  // Filters the data by date and returns an Object containing a list of 5-day forecast.\n  _groupByDays = data => {\n    return (data.reduce((list, item) => {\n      const forecastDate = item.dt_txt.substr(0,10);\n      list[forecastDate] = list[forecastDate] || [];\n      list[forecastDate].push(item);\n\n      return list;\n    }, {}));\n  };\n\n  // Returns week of the day\n  _getDayInfo = data => {\n    const daysOfWeek = [\"sunday\", \"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\", \"saturday\"];\n    return daysOfWeek[new Date(data[0].dt * 1000).getDay()];\n  };\n\n  // Fetches the icon using the icon code available in the forecast data.\n  _getIcon = data => `https://openweathermap.org/img/w/${data[0].weather[0].icon}.png`;\n\n  // Gets the Minimum, Maximum and Avg Humidity temperatures of the day.\n  _getInfo = (data, min=[], max=[], humidity=[]) => {\n    data.map(item => {\n      max.push(item.main.temp_max);\n      min.push(item.main.temp_min);\n      humidity.push(item.main.humidity);\n    });\n\n    const minMax = {\n      min: Math.round(Math.min(...min)),\n      max: Math.round(Math.max(...max)),\n    };\n\n    // Gets the day's average humdity\n    const avgHumdity = Math.round(humidity.reduce((curr, next) => curr + next) / humidity.length);\n\n    return (\n      <div className=\"weather-info\">\n        <div className=\"min-max\">\n          <strong>{`${minMax.max}\u00c2\u00b0C`}</strong> / {`${minMax.min}\u00c2\u00b0C`}\n        </div>\n        <div className=\"more-info\">\n          {`Avg. Humidity: ${avgHumdity}%`}\n        </div>\n      </div>\n    );\n  };\n\n  // Toggles accordion to display hourly weather information\n  _showMoreInfo = (index) => {\n    const elm = this.refs[`div-${index}`];\n    const expandedElment = document.querySelector(\".expanded\");\n\n    elm.classList.add(\"expanded\");\n    expandedElment !== null && expandedElment.classList.remove(\"expanded\");\n  }\n\n  render() {\n\n    const { forecasts } = this.props;\n    const tiles = Object.values(this._groupByDays(forecasts));\n\n    // Edge case:\n    // When the webservice returns data for 6 calendar days during evenings as a result of offset,\n    // this ensures that we are showing only 5-days of forecast.\n    const forecastTiles = tiles.length > 5 ? tiles.slice(0, 5) : tiles;\n\n    return (\n      <div className=\"forecast-tiles\">\n        {forecastTiles.map((item, i) => (\n          <div\n            className={`forecast-tile tile-${i}`}\n            key={i}\n            ref={`div-${i}`}\n            onClick={() => {this._showMoreInfo(i)}}\n          >\n            <div className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n            <div className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n          </div>\n        ))}\n      </div>\n    );\n  }\n}",
+                "content": "export default class ForecastTiles extends Component {\n\n  // Filters the data by date and returns an Object containing a list of 5-day forecast.\n  _groupByDays = data => {\n    return (data.reduce((list, item) => {\n      const forecastDate = item.dt_txt.substr(0,10);\n      list[forecastDate] = list[forecastDate] || [];\n      list[forecastDate].push(item);\n\n      return list;\n    }, {}));\n  };\n\n  // Returns week of the day\n  _getDayInfo = data => {\n    const daysOfWeek = [\"sunday\", \"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\", \"saturday\"];\n    return daysOfWeek[new Date(data[0].dt * 1000).getDay()];\n  };\n\n  // Fetches the icon using the icon code available in the forecast data.\n  _getIcon = data => `https://openweathermap.org/img/w/${data[0].weather[0].icon}.png`;\n\n  // Gets the Minimum, Maximum and Avg Humidity temperatures of the day.\n  _getInfo = (data, min=[], max=[], humidity=[]) => {\n    data.map(item => {\n      max.push(item.main.temp_max);\n      min.push(item.main.temp_min);\n      humidity.push(item.main.humidity);\n    });\n\n    const minMax = {\n      min: Math.round(Math.min(...min)),\n      max: Math.round(Math.max(...max)),\n    };\n\n    // Gets the day's average humdity\n    const avgHumdity = Math.round(humidity.reduce((curr, next) => curr + next) / humidity.length);\n\n    return (\n      <div className=\"weather-info\">\n        <div className=\"min-max\">\n          <strong>{`${minMax.max}\u00c2\u00b0C`}</strong> / {`${minMax.min}\u00c2\u00b0C`}\n        </div>\n        <div className=\"more-info\">\n          {`Avg. Humidity: ${avgHumdity}%`}\n        </div>\n      </div>\n    );\n  };\n\n  // Toggles accordion to display hourly weather information\n  _showMoreInfo = (index) => {\n    const elm = this.refs[`div-${index}`];\n    const expandedElment = document.querySelector(\".expanded\");\n\n    elm.classList.add(\"expanded\");\n    expandedElment !== null && expandedElment.classList.remove(\"expanded\");\n  }\n\n  render() {\n\n    const { forecasts } = this.props;\n    const tiles = Object.values(this._groupByDays(forecasts));\n\n    // Edge case:\n    // When the webservice returns data for 6 calendar days during evenings as a result of offset,\n    // this ensures that we are showing only 5-days of forecast.\n    const forecastTiles = tiles.length > 5 ? tiles.slice(0, 5) : tiles;\n\n    return (\n      <div className=\"forecast-tiles\">\n        {forecastTiles.map((item, i) => (\n          <div\n            className={`forecast-tile tile-${i}`}\n            key={i}\n            ref={`div-${i}`}\n            onClick={() => {this._showMoreInfo(i)}}\n          >\n            <div className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n            <div className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n          </div>\n        ))}\n      </div>\n    );\n  }\n}\n// "
+            }
+        ],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "data.reduce",
+                "content": "data.reduce((list, item) => {\n      const forecastDate = item.dt_txt.substr(0,10);\n      list[forecastDate] = list[forecastDate] || [];\n      list[forecastDate].push(item);\n\n      return list;\n    }, {})"
+            },
+            {
+                "function": "item.dt_txt.substr",
+                "content": "item.dt_txt.substr(0,10)"
+            },
+            {
+                "function": "list[forecastDate].push",
+                "content": "list[forecastDate].push(item)"
+            },
+            {
+                "function": "new Date(data[0].dt * 1000).getDay",
+                "content": "new Date(data[0].dt * 1000).getDay()"
+            },
+            {
+                "function": "data.map",
+                "content": "data.map(item => {\n      max.push(item.main.temp_max);\n      min.push(item.main.temp_min);\n      humidity.push(item.main.humidity);\n    })"
+            },
+            {
+                "function": "max.push",
+                "content": "max.push(item.main.temp_max)"
+            },
+            {
+                "function": "min.push",
+                "content": "min.push(item.main.temp_min)"
+            },
+            {
+                "function": "humidity.push",
+                "content": "humidity.push(item.main.humidity)"
+            },
+            {
+                "function": "Math.round",
+                "content": "Math.round(Math.min(...min))"
+            },
+            {
+                "function": "Math.min",
+                "content": "Math.min(...min)"
+            },
+            {
+                "function": "Math.round",
+                "content": "Math.round(Math.max(...max))"
+            },
+            {
+                "function": "Math.max",
+                "content": "Math.max(...max)"
+            },
+            {
+                "function": "Math.round",
+                "content": "Math.round(humidity.reduce((curr, next) => curr + next) / humidity.length)"
+            },
+            {
+                "function": "humidity.reduce",
+                "content": "humidity.reduce((curr, next) => curr + next)"
+            },
+            {
+                "function": "document.querySelector",
+                "content": "ment.querySelector(\".expanded\");\n\n "
+            },
+            {
+                "function": "elm.classList.add",
+                "content": "classList.add(\"expanded\");\n  "
+            },
+            {
+                "function": "expandedElment.classList.remove",
+                "content": "ndedElment.classList.remove(\"expanded\");\n  "
+            },
+            {
+                "function": "Object.values",
+                "content": "ct.values(this._groupByDays(forecasts));\n\n "
+            },
+            {
+                "function": "this._groupByDays",
+                "content": "._groupByDays(forecasts));\n\n"
+            },
+            {
+                "function": "tiles.slice",
+                "content": "s.slice(0, 5) : t"
+            },
+            {
+                "function": "forecastTiles.map",
+                "content": "castTiles.map((item, i) => (\n          <div\n            className={`forecast-tile tile-${i}`}\n            key={i}\n            ref={`div-${i}`}\n            onClick={() => {this._showMoreInfo(i)}}\n          >\n            <div className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n            <div className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n          </div>\n        ))}\n  "
+            },
+            {
+                "function": "this._showMoreInfo",
+                "content": "._showMoreInfo(i)}}\n "
+            },
+            {
+                "function": "this._getIcon",
+                "content": "._getIcon(item)} />"
+            },
+            {
+                "function": "this._getDayInfo",
+                "content": "._getDayInfo(item)}\n  "
+            },
+            {
+                "function": "this._getInfo",
+                "content": "._getInfo(item)}\n  "
+            }
+        ],
+        "arrow_functions": [
+            {
+                "function": "arrow_function",
+                "content": "data => {\n    return (data.reduce((list, item) => {\n      const forecastDate = item.dt_txt.substr(0,10);\n      list[forecastDate] = list[forecastDate] || [];\n      list[forecastDate].push(item);\n\n      return list;\n    }, {}));\n  }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "(list, item) => {\n      const forecastDate = item.dt_txt.substr(0,10);\n      list[forecastDate] = list[forecastDate] || [];\n      list[forecastDate].push(item);\n\n      return list;\n    }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "data => {\n    const daysOfWeek = [\"sunday\", \"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\", \"saturday\"];\n    return daysOfWeek[new Date(data[0].dt * 1000).getDay()];\n  }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "data => `https://openweathermap.org/img/w/${data[0].weather[0].icon}.png`"
+            },
+            {
+                "function": "arrow_function",
+                "content": "(data, min=[], max=[], humidity=[]) => {\n    data.map(item => {\n      max.push(item.main.temp_max);\n      min.push(item.main.temp_min);\n      humidity.push(item.main.humidity);\n    });\n\n    const minMax = {\n      min: Math.round(Math.min(...min)),\n      max: Math.round(Math.max(...max)),\n    };\n\n    // Gets the day's average humdity\n    const avgHumdity = Math.round(humidity.reduce((curr, next) => curr + next) / humidity.length);\n\n    return (\n      <div className=\"weather-info\">\n        <div className=\"min-max\">\n          <strong>{`${minMax.max}\u00c2\u00b0C`}</strong> / {`${minMax.min}\u00c2\u00b0C`}\n        </div>\n        <div className=\"more-info\">\n          {`Avg. Humidity: ${avgHumdity}%`}\n        </div>\n      </div>\n    );\n  };\n\n "
+            },
+            {
+                "function": "arrow_function",
+                "content": "item => {\n      max.push(item.main.temp_max);\n      min.push(item.main.temp_min);\n      humidity.push(item.main.humidity);\n    }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "(curr, next) => curr + next"
+            },
+            {
+                "function": "arrow_function",
+                "content": "ex) => {\n    const elm = this.refs[`div-${index}`];\n    const expandedElment = document.querySelector(\".expanded\");\n\n    elm.classList.add(\"expanded\");\n    expandedElment !== null && expandedElment.classList.remove(\"expanded\");\n  }\n\n  "
+            },
+            {
+                "function": "arrow_function",
+                "content": "m, i) => (\n          <div\n            className={`forecast-tile tile-${i}`}\n            key={i}\n            ref={`div-${i}`}\n            onClick={() => {this._showMoreInfo(i)}}\n          >\n            <div className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n            <div className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n          </div>\n        ))}\n "
+            },
+            {
+                "function": "arrow_function",
+                "content": "> {this._showMoreInfo(i)}}\n  "
+            }
+        ],
+        "jsx_elements": [
+            {
+                "element": "jsx_element",
+                "content": "<div className=\"weather-info\">\n        <div className=\"min-max\">\n          <strong>{`${minMax.max}\u00c2\u00b0C`}</strong> / {`${minMax.min}\u00c2\u00b0C`}\n        </div>\n        <div className=\"more-info\">\n          {`Avg. Humidity: ${avgHumdity}%`}\n        </div>\n      </div>\n   "
+            },
+            {
+                "element": "jsx_element",
+                "content": "<div className=\"min-max\">\n          <strong>{`${minMax.max}\u00c2\u00b0C`}</strong> / {`${minMax.min}\u00c2\u00b0C`}\n        </div>\n   "
+            },
+            {
+                "element": "jsx_element",
+                "content": "<strong>{`${minMax.max}\u00c2\u00b0C`}</strong> /"
+            },
+            {
+                "element": "jsx_element",
+                "content": " className=\"more-info\">\n          {`Avg. Humidity: ${avgHumdity}%`}\n        </div>\n   "
+            },
+            {
+                "element": "jsx_element",
+                "content": " className=\"forecast-tiles\">\n        {forecastTiles.map((item, i) => (\n          <div\n            className={`forecast-tile tile-${i}`}\n            key={i}\n            ref={`div-${i}`}\n            onClick={() => {this._showMoreInfo(i)}}\n          >\n            <div className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n            <div className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n          </div>\n        ))}\n      </div>\n   "
+            },
+            {
+                "element": "jsx_element",
+                "content": "\n            className={`forecast-tile tile-${i}`}\n            key={i}\n            ref={`div-${i}`}\n            onClick={() => {this._showMoreInfo(i)}}\n          >\n            <div className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n            <div className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n          </div>\n   "
+            },
+            {
+                "element": "jsx_element",
+                "content": " className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n   "
+            },
+            {
+                "element": "jsx_element",
+                "content": " className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n   "
+            },
+            {
+                "element": "jsx_element",
+                "content": " className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n   "
+            }
+        ],
+        "imports_content": [
+            "import React, { Component } from \"react\";",
+            "import DetailedInfo from \"./DetailedInfo\";"
+        ],
+        "exports_content": [
+            "export default class ForecastTiles extends Component {\n\n  // Filters the data by date and returns an Object containing a list of 5-day forecast.\n  _groupByDays = data => {\n    return (data.reduce((list, item) => {\n      const forecastDate = item.dt_txt.substr(0,10);\n      list[forecastDate] = list[forecastDate] || [];\n      list[forecastDate].push(item);\n\n      return list;\n    }, {}));\n  };\n\n  // Returns week of the day\n  _getDayInfo = data => {\n    const daysOfWeek = [\"sunday\", \"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\", \"saturday\"];\n    return daysOfWeek[new Date(data[0].dt * 1000).getDay()];\n  };\n\n  // Fetches the icon using the icon code available in the forecast data.\n  _getIcon = data => `https://openweathermap.org/img/w/${data[0].weather[0].icon}.png`;\n\n  // Gets the Minimum, Maximum and Avg Humidity temperatures of the day.\n  _getInfo = (data, min=[], max=[], humidity=[]) => {\n    data.map(item => {\n      max.push(item.main.temp_max);\n      min.push(item.main.temp_min);\n      humidity.push(item.main.humidity);\n    });\n\n    const minMax = {\n      min: Math.round(Math.min(...min)),\n      max: Math.round(Math.max(...max)),\n    };\n\n    // Gets the day's average humdity\n    const avgHumdity = Math.round(humidity.reduce((curr, next) => curr + next) / humidity.length);\n\n    return (\n      <div className=\"weather-info\">\n        <div className=\"min-max\">\n          <strong>{`${minMax.max}\u00c2\u00b0C`}</strong> / {`${minMax.min}\u00c2\u00b0C`}\n        </div>\n        <div className=\"more-info\">\n          {`Avg. Humidity: ${avgHumdity}%`}\n        </div>\n      </div>\n    );\n  };\n\n  // Toggles accordion to display hourly weather information\n  _showMoreInfo = (index) => {\n    const elm = this.refs[`div-${index}`];\n    const expandedElment = document.querySelector(\".expanded\");\n\n    elm.classList.add(\"expanded\");\n    expandedElment !== null && expandedElment.classList.remove(\"expanded\");\n  }\n\n  render() {\n\n    const { forecasts } = this.props;\n    const tiles = Object.values(this._groupByDays(forecasts));\n\n    // Edge case:\n    // When the webservice returns data for 6 calendar days during evenings as a result of offset,\n    // this ensures that we are showing only 5-days of forecast.\n    const forecastTiles = tiles.length > 5 ? tiles.slice(0, 5) : tiles;\n\n    return (\n      <div className=\"forecast-tiles\">\n        {forecastTiles.map((item, i) => (\n          <div\n            className={`forecast-tile tile-${i}`}\n            key={i}\n            ref={`div-${i}`}\n            onClick={() => {this._showMoreInfo(i)}}\n          >\n            <div className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n            <div className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n          </div>\n        ))}\n      </div>\n    );\n  }\n}\n// "
+        ],
+        "functions_content": [],
+        "function_calls_content": [
+            "data.reduce((list, item) => {\n      const forecastDate = item.dt_txt.substr(0,10);\n      list[forecastDate] = list[forecastDate] || [];\n      list[forecastDate].push(item);\n\n      return list;\n    }, {})",
+            "item.dt_txt.substr(0,10)",
+            "list[forecastDate].push(item)",
+            "new Date(data[0].dt * 1000).getDay()",
+            "data.map(item => {\n      max.push(item.main.temp_max);\n      min.push(item.main.temp_min);\n      humidity.push(item.main.humidity);\n    })",
+            "max.push(item.main.temp_max)",
+            "min.push(item.main.temp_min)",
+            "humidity.push(item.main.humidity)",
+            "Math.round(Math.min(...min))",
+            "Math.min(...min)",
+            "Math.round(Math.max(...max))",
+            "Math.max(...max)",
+            "Math.round(humidity.reduce((curr, next) => curr + next) / humidity.length)",
+            "humidity.reduce((curr, next) => curr + next)",
+            "ment.querySelector(\".expanded\");\n\n ",
+            "classList.add(\"expanded\");\n  ",
+            "ndedElment.classList.remove(\"expanded\");\n  ",
+            "ct.values(this._groupByDays(forecasts));\n\n ",
+            "._groupByDays(forecasts));\n\n",
+            "s.slice(0, 5) : t",
+            "castTiles.map((item, i) => (\n          <div\n            className={`forecast-tile tile-${i}`}\n            key={i}\n            ref={`div-${i}`}\n            onClick={() => {this._showMoreInfo(i)}}\n          >\n            <div className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n            <div className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n          </div>\n        ))}\n  ",
+            "._showMoreInfo(i)}}\n ",
+            "._getIcon(item)} />",
+            "._getDayInfo(item)}\n  ",
+            "._getInfo(item)}\n  "
+        ],
+        "arrow_functions_content": [
+            "data => {\n    return (data.reduce((list, item) => {\n      const forecastDate = item.dt_txt.substr(0,10);\n      list[forecastDate] = list[forecastDate] || [];\n      list[forecastDate].push(item);\n\n      return list;\n    }, {}));\n  }",
+            "(list, item) => {\n      const forecastDate = item.dt_txt.substr(0,10);\n      list[forecastDate] = list[forecastDate] || [];\n      list[forecastDate].push(item);\n\n      return list;\n    }",
+            "data => {\n    const daysOfWeek = [\"sunday\", \"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\", \"saturday\"];\n    return daysOfWeek[new Date(data[0].dt * 1000).getDay()];\n  }",
+            "data => `https://openweathermap.org/img/w/${data[0].weather[0].icon}.png`",
+            "(data, min=[], max=[], humidity=[]) => {\n    data.map(item => {\n      max.push(item.main.temp_max);\n      min.push(item.main.temp_min);\n      humidity.push(item.main.humidity);\n    });\n\n    const minMax = {\n      min: Math.round(Math.min(...min)),\n      max: Math.round(Math.max(...max)),\n    };\n\n    // Gets the day's average humdity\n    const avgHumdity = Math.round(humidity.reduce((curr, next) => curr + next) / humidity.length);\n\n    return (\n      <div className=\"weather-info\">\n        <div className=\"min-max\">\n          <strong>{`${minMax.max}\u00c2\u00b0C`}</strong> / {`${minMax.min}\u00c2\u00b0C`}\n        </div>\n        <div className=\"more-info\">\n          {`Avg. Humidity: ${avgHumdity}%`}\n        </div>\n      </div>\n    );\n  };\n\n ",
+            "item => {\n      max.push(item.main.temp_max);\n      min.push(item.main.temp_min);\n      humidity.push(item.main.humidity);\n    }",
+            "(curr, next) => curr + next",
+            "ex) => {\n    const elm = this.refs[`div-${index}`];\n    const expandedElment = document.querySelector(\".expanded\");\n\n    elm.classList.add(\"expanded\");\n    expandedElment !== null && expandedElment.classList.remove(\"expanded\");\n  }\n\n  ",
+            "m, i) => (\n          <div\n            className={`forecast-tile tile-${i}`}\n            key={i}\n            ref={`div-${i}`}\n            onClick={() => {this._showMoreInfo(i)}}\n          >\n            <div className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n            <div className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n          </div>\n        ))}\n ",
+            "> {this._showMoreInfo(i)}}\n  "
+        ],
+        "jsx_content": [
+            "<div className=\"weather-info\">\n        <div className=\"min-max\">\n          <strong>{`${minMax.max}\u00c2\u00b0C`}</strong> / {`${minMax.min}\u00c2\u00b0C`}\n        </div>\n        <div className=\"more-info\">\n          {`Avg. Humidity: ${avgHumdity}%`}\n        </div>\n      </div>\n   ",
+            "<div className=\"min-max\">\n          <strong>{`${minMax.max}\u00c2\u00b0C`}</strong> / {`${minMax.min}\u00c2\u00b0C`}\n        </div>\n   ",
+            "<strong>{`${minMax.max}\u00c2\u00b0C`}</strong> /",
+            " className=\"more-info\">\n          {`Avg. Humidity: ${avgHumdity}%`}\n        </div>\n   ",
+            " className=\"forecast-tiles\">\n        {forecastTiles.map((item, i) => (\n          <div\n            className={`forecast-tile tile-${i}`}\n            key={i}\n            ref={`div-${i}`}\n            onClick={() => {this._showMoreInfo(i)}}\n          >\n            <div className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n            <div className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n          </div>\n        ))}\n      </div>\n   ",
+            "\n            className={`forecast-tile tile-${i}`}\n            key={i}\n            ref={`div-${i}`}\n            onClick={() => {this._showMoreInfo(i)}}\n          >\n            <div className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n            <div className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n          </div>\n   ",
+            " className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n   ",
+            " className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n   ",
+            " className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n   "
+        ],
+        "code_content": "import React, { Component } from \"react\";\nimport DetailedInfo from \"./DetailedInfo\";\n\nexport default class ForecastTiles extends Component {\n\n  // Filters the data by date and returns an Object containing a list of 5-day forecast.\n  _groupByDays = data => {\n    return (data.reduce((list, item) => {\n      const forecastDate = item.dt_txt.substr(0,10);\n      list[forecastDate] = list[forecastDate] || [];\n      list[forecastDate].push(item);\n\n      return list;\n    }, {}));\n  };\n\n  // Returns week of the day\n  _getDayInfo = data => {\n    const daysOfWeek = [\"sunday\", \"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\", \"saturday\"];\n    return daysOfWeek[new Date(data[0].dt * 1000).getDay()];\n  };\n\n  // Fetches the icon using the icon code available in the forecast data.\n  _getIcon = data => `https://openweathermap.org/img/w/${data[0].weather[0].icon}.png`;\n\n  // Gets the Minimum, Maximum and Avg Humidity temperatures of the day.\n  _getInfo = (data, min=[], max=[], humidity=[]) => {\n    data.map(item => {\n      max.push(item.main.temp_max);\n      min.push(item.main.temp_min);\n      humidity.push(item.main.humidity);\n    });\n\n    const minMax = {\n      min: Math.round(Math.min(...min)),\n      max: Math.round(Math.max(...max)),\n    };\n\n    // Gets the day's average humdity\n    const avgHumdity = Math.round(humidity.reduce((curr, next) => curr + next) / humidity.length);\n\n    return (\n      <div className=\"weather-info\">\n        <div className=\"min-max\">\n          <strong>{`${minMax.max}\u00c2\u00b0C`}</strong> / {`${minMax.min}\u00c2\u00b0C`}\n        </div>\n        <div className=\"more-info\">\n          {`Avg. Humidity: ${avgHumdity}%`}\n        </div>\n      </div>\n    );\n  };\n\n  // Toggles accordion to display hourly weather information\n  _showMoreInfo = (index) => {\n    const elm = this.refs[`div-${index}`];\n    const expandedElment = document.querySelector(\".expanded\");\n\n    elm.classList.add(\"expanded\");\n    expandedElment !== null && expandedElment.classList.remove(\"expanded\");\n  }\n\n  render() {\n\n    const { forecasts } = this.props;\n    const tiles = Object.values(this._groupByDays(forecasts));\n\n    // Edge case:\n    // When the webservice returns data for 6 calendar days during evenings as a result of offset,\n    // this ensures that we are showing only 5-days of forecast.\n    const forecastTiles = tiles.length > 5 ? tiles.slice(0, 5) : tiles;\n\n    return (\n      <div className=\"forecast-tiles\">\n        {forecastTiles.map((item, i) => (\n          <div\n            className={`forecast-tile tile-${i}`}\n            key={i}\n            ref={`div-${i}`}\n            onClick={() => {this._showMoreInfo(i)}}\n          >\n            <div className=\"primary-info\">\n              <div className=\"icon\">\n                <img src={this._getIcon(item)} />\n                {this._getDayInfo(item)}\n              </div>\n              {this._getInfo(item)}\n            </div>\n            <div className=\"detailed-info\" key={i}>\n              <DetailedInfo data={item} />\n            </div>\n          </div>\n        ))}\n      </div>\n    );\n  }\n}\n// TODO: Add defaultProps and PropType validations\n"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\components\\WeatherForecast.js",
+        "imports": [
+            {
+                "module": "\"react\"",
+                "content": "import React, { Component } from \"react\";"
+            },
+            {
+                "module": "\"react-redux\"",
+                "content": "import { connect } from \"react-redux\";"
+            },
+            {
+                "module": "\"./ForecastTiles\"",
+                "content": "import ForecastTiles from \"./ForecastTiles\";"
+            },
+            {
+                "module": "\"./Dashboard\"",
+                "content": "import Dashboard from \"./Dashboard\";"
+            }
+        ],
+        "exports": [
+            {
+                "export": "WeatherForecast",
+                "content": "export default WeatherForecast;"
+            }
+        ],
+        "functions": [],
+        "function_calls": [],
+        "arrow_functions": [
+            {
+                "function": "arrow_function",
+                "content": "({ data }) => {\n\n    const { city, list } = data;\n    const { name } = city;\n  \n    return (\n      <div className=\"weather-forecast-wrapper\">\n        <Dashboard city={name} />\n        <ForecastTiles forecasts={list} />\n      </div>\n    );\n}"
+            }
+        ],
+        "jsx_elements": [
+            {
+                "element": "jsx_element",
+                "content": "<div className=\"weather-forecast-wrapper\">\n        <Dashboard city={name} />\n        <ForecastTiles forecasts={list} />\n      </div>"
+            }
+        ],
+        "imports_content": [
+            "import React, { Component } from \"react\";",
+            "import { connect } from \"react-redux\";",
+            "import ForecastTiles from \"./ForecastTiles\";",
+            "import Dashboard from \"./Dashboard\";"
+        ],
+        "exports_content": [
+            "export default WeatherForecast;"
+        ],
+        "functions_content": [],
+        "function_calls_content": [],
+        "arrow_functions_content": [
+            "({ data }) => {\n\n    const { city, list } = data;\n    const { name } = city;\n  \n    return (\n      <div className=\"weather-forecast-wrapper\">\n        <Dashboard city={name} />\n        <ForecastTiles forecasts={list} />\n      </div>\n    );\n}"
+        ],
+        "jsx_content": [
+            "<div className=\"weather-forecast-wrapper\">\n        <Dashboard city={name} />\n        <ForecastTiles forecasts={list} />\n      </div>"
+        ],
+        "code_content": "import React, { Component } from \"react\";\nimport { connect } from \"react-redux\";\n\nimport ForecastTiles from \"./ForecastTiles\";\nimport Dashboard from \"./Dashboard\";\n\nconst WeatherForecast = ({ data }) => {\n\n    const { city, list } = data;\n    const { name } = city;\n  \n    return (\n      <div className=\"weather-forecast-wrapper\">\n        <Dashboard city={name} />\n        <ForecastTiles forecasts={list} />\n      </div>\n    );\n};\n\nexport default WeatherForecast;"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\constants\\ActionTypes.js",
+        "imports": [],
+        "exports": [
+            {
+                "export": "const FETCH_DATA_FULFILLED = \"FETCH_DATA_FULFILLED\";",
+                "content": "export const FETCH_DATA_FULFILLED = \"FETCH_DATA_FULFILLED\";"
+            },
+            {
+                "export": "const FETCH_DATA_REJECTED = \"FETCH_DATA_REJECTED\";",
+                "content": "export const FETCH_DATA_REJECTED = \"FETCH_DATA_REJECTED\";"
+            }
+        ],
+        "functions": [],
+        "function_calls": [],
+        "arrow_functions": [],
+        "jsx_elements": [],
+        "imports_content": [],
+        "exports_content": [
+            "export const FETCH_DATA_FULFILLED = \"FETCH_DATA_FULFILLED\";",
+            "export const FETCH_DATA_REJECTED = \"FETCH_DATA_REJECTED\";"
+        ],
+        "functions_content": [],
+        "function_calls_content": [],
+        "arrow_functions_content": [],
+        "jsx_content": [],
+        "code_content": "// ActionTypes are defined in constants.\n\n// They are imported in Actions and Reducers.\n// This prevents errors if they are misspelled over here.\n\n/* eslint-disable */\n\nexport const FETCH_DATA_FULFILLED = \"FETCH_DATA_FULFILLED\";\nexport const FETCH_DATA_REJECTED = \"FETCH_DATA_REJECTED\";\n\n/* eslint-enable */"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\constants\\generalConstants.js",
+        "imports": [],
+        "exports": [
+            {
+                "export": "const APP_ID = \"\";",
+                "content": "export const APP_ID = \"\";"
+            }
+        ],
+        "functions": [],
+        "function_calls": [],
+        "arrow_functions": [],
+        "jsx_elements": [],
+        "imports_content": [],
+        "exports_content": [
+            "export const APP_ID = \"\";"
+        ],
+        "functions_content": [],
+        "function_calls_content": [],
+        "arrow_functions_content": [],
+        "jsx_content": [],
+        "code_content": "/* eslint-disable */\n\nexport const APP_ID = \"\";\n\n/* eslint-enable */\n"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\reducers\\index.js",
+        "imports": [
+            {
+                "module": "\"redux\"",
+                "content": "import { combineReducers } from \"redux\";"
+            },
+            {
+                "module": "\"./weatherStation\"",
+                "content": "import weatherStation from \"./weatherStation\";"
+            }
+        ],
+        "exports": [],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "combineReducers",
+                "content": "combineReducers({ weatherStation })"
+            }
+        ],
+        "arrow_functions": [],
+        "jsx_elements": [],
+        "imports_content": [
+            "import { combineReducers } from \"redux\";",
+            "import weatherStation from \"./weatherStation\";"
+        ],
+        "exports_content": [],
+        "functions_content": [],
+        "function_calls_content": [
+            "combineReducers({ weatherStation })"
+        ],
+        "arrow_functions_content": [],
+        "jsx_content": [],
+        "code_content": "import { combineReducers } from \"redux\";\n\nimport weatherStation from \"./weatherStation\";\n\nexport default combineReducers({ weatherStation });\n"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\reducers\\weatherStation.js",
+        "imports": [
+            {
+                "module": "\"../constants/ActionTypes\"",
+                "content": "import { FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED } from \"../constants/ActionTypes\";"
+            }
+        ],
+        "exports": [
+            {
+                "export": "function reducer(state = {\n  data: null,\n  status: null\n}, action) {\n  switch (action.type) {\n    case FETCH_DATA_FULFILLED: {\n      return {\n        ...state,\n        data: action.payload,\n        status: \"success\"\n      };\n      break;\n    }\n    case FETCH_DATA_REJECTED: {\n      return {\n        ...state,\n        status: \"failed\"\n      };\n\n      console.error(`Could not fetch the data from webservice. ${action.payload}.`); // eslint-disable-line\n      break;\n    }\n  }\n\n  return state;\n}",
+                "content": "export default function reducer(state = {\n  data: null,\n  status: null\n}, action) {\n  switch (action.type) {\n    case FETCH_DATA_FULFILLED: {\n      return {\n        ...state,\n        data: action.payload,\n        status: \"success\"\n      };\n      break;\n    }\n    case FETCH_DATA_REJECTED: {\n      return {\n        ...state,\n        status: \"failed\"\n      };\n\n      console.error(`Could not fetch the data from webservice. ${action.payload}.`); // eslint-disable-line\n      break;\n    }\n  }\n\n  return state;\n}"
+            }
+        ],
+        "functions": [
+            {
+                "function": "reducer",
+                "content": "function reducer(state = {\n  data: null,\n  status: null\n}, action) {\n  switch (action.type) {\n    case FETCH_DATA_FULFILLED: {\n      return {\n        ...state,\n        data: action.payload,\n        status: \"success\"\n      };\n      break;\n    }\n    case FETCH_DATA_REJECTED: {\n      return {\n        ...state,\n        status: \"failed\"\n      };\n\n      console.error(`Could not fetch the data from webservice. ${action.payload}.`); // eslint-disable-line\n      break;\n    }\n  }\n\n  return state;\n}"
+            }
+        ],
+        "function_calls": [
+            {
+                "function": "console.error",
+                "content": "console.error(`Could not fetch the data from webservice. ${action.payload}.`)"
+            }
+        ],
+        "arrow_functions": [],
+        "jsx_elements": [],
+        "imports_content": [
+            "import { FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED } from \"../constants/ActionTypes\";"
+        ],
+        "exports_content": [
+            "export default function reducer(state = {\n  data: null,\n  status: null\n}, action) {\n  switch (action.type) {\n    case FETCH_DATA_FULFILLED: {\n      return {\n        ...state,\n        data: action.payload,\n        status: \"success\"\n      };\n      break;\n    }\n    case FETCH_DATA_REJECTED: {\n      return {\n        ...state,\n        status: \"failed\"\n      };\n\n      console.error(`Could not fetch the data from webservice. ${action.payload}.`); // eslint-disable-line\n      break;\n    }\n  }\n\n  return state;\n}"
+        ],
+        "functions_content": [
+            "function reducer(state = {\n  data: null,\n  status: null\n}, action) {\n  switch (action.type) {\n    case FETCH_DATA_FULFILLED: {\n      return {\n        ...state,\n        data: action.payload,\n        status: \"success\"\n      };\n      break;\n    }\n    case FETCH_DATA_REJECTED: {\n      return {\n        ...state,\n        status: \"failed\"\n      };\n\n      console.error(`Could not fetch the data from webservice. ${action.payload}.`); // eslint-disable-line\n      break;\n    }\n  }\n\n  return state;\n}"
+        ],
+        "function_calls_content": [
+            "console.error(`Could not fetch the data from webservice. ${action.payload}.`)"
+        ],
+        "arrow_functions_content": [],
+        "jsx_content": [],
+        "code_content": "import { FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED } from \"../constants/ActionTypes\";\n\nexport default function reducer(state = {\n  data: null,\n  status: null\n}, action) {\n  switch (action.type) {\n    case FETCH_DATA_FULFILLED: {\n      return {\n        ...state,\n        data: action.payload,\n        status: \"success\"\n      };\n      break;\n    }\n    case FETCH_DATA_REJECTED: {\n      return {\n        ...state,\n        status: \"failed\"\n      };\n\n      console.error(`Could not fetch the data from webservice. ${action.payload}.`); // eslint-disable-line\n      break;\n    }\n  }\n\n  return state;\n}"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\test\\jestSetup.js",
+        "imports": [
+            {
+                "module": "\"babel-polyfill\"",
+                "content": "import \"babel-polyfill\";"
+            },
+            {
+                "module": "\"enzyme\"",
+                "content": "import Enzyme from \"enzyme\";"
+            },
+            {
+                "module": "\"enzyme-adapter-react-16\"",
+                "content": "import Adapter from \"enzyme-adapter-react-16\";"
+            }
+        ],
+        "exports": [],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "Enzyme.configure",
+                "content": "Enzyme.configure({ adapter: new Adapter() })"
+            }
+        ],
+        "arrow_functions": [],
+        "jsx_elements": [],
+        "imports_content": [
+            "import \"babel-polyfill\";",
+            "import Enzyme from \"enzyme\";",
+            "import Adapter from \"enzyme-adapter-react-16\";"
+        ],
+        "exports_content": [],
+        "functions_content": [],
+        "function_calls_content": [
+            "Enzyme.configure({ adapter: new Adapter() })"
+        ],
+        "arrow_functions_content": [],
+        "jsx_content": [],
+        "code_content": "import \"babel-polyfill\";\nimport Enzyme from \"enzyme\";\nimport Adapter from \"enzyme-adapter-react-16\";\n\nEnzyme.configure({ adapter: new Adapter() });"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\test\\__tests__\\dashboard.js",
+        "imports": [
+            {
+                "module": "\"react\"",
+                "content": "import React from \"react\";"
+            },
+            {
+                "module": "\"enzyme\"",
+                "content": "import { render, mount, shallow } from \"enzyme\";"
+            },
+            {
+                "module": "\"redux-mock-store\"",
+                "content": "import configureStore from \"redux-mock-store\";"
+            },
+            {
+                "module": "\"../../components/Dashboard\"",
+                "content": "import Dashboard from \"../../components/Dashboard\";"
+            }
+        ],
+        "exports": [],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "configureStore",
+                "content": "configureStore()"
+            },
+            {
+                "function": "describe",
+                "content": "describe(\"<Dashboard />\", () => {\n  it(\"renders an `.weather-dashboard`\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.hasClass(\"weather-dashboard\")).toBe(true);\n  });\n\n  it(\"should contain a input field\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\".city-input\")).toHaveLength(1);\n  });\n\n  it(\"should contain a change city button\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\"#change-city-btn\")).toHaveLength(1);\n  });\n\n  it(\"should contain app heading\", () => {\n    const wrapper = mount(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    const heading = <h1 className=\"heading\">5-Day Weather Forecast</h1>;\n    expect(wrapper.contains(heading)).toEqual(true);\n  });\n\n  it(\"should receive city prop\", () => {\n    const wrapper = shallow(<Dashboard city=\"london\" store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.prop(\"city\")).toBeDefined();\n  });\n})"
+            },
+            {
+                "function": "it",
+                "content": "it(\"renders an `.weather-dashboard`\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.hasClass(\"weather-dashboard\")).toBe(true);\n  })"
+            },
+            {
+                "function": "render",
+                "content": "render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />)"
+            },
+            {
+                "function": "mockStore",
+                "content": "mockStore({ weatherStation: {status: STATUS}})"
+            },
+            {
+                "function": "expect(wrapper.hasClass(\"weather-dashboard\")).toBe",
+                "content": "expect(wrapper.hasClass(\"weather-dashboard\")).toBe(true)"
+            },
+            {
+                "function": "expect",
+                "content": "expect(wrapper.hasClass(\"weather-dashboard\"))"
+            },
+            {
+                "function": "wrapper.hasClass",
+                "content": "wrapper.hasClass(\"weather-dashboard\")"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should contain a input field\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\".city-input\")).toHaveLength(1);\n  })"
+            },
+            {
+                "function": "render",
+                "content": "render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />)"
+            },
+            {
+                "function": "mockStore",
+                "content": "mockStore({ weatherStation: {status: STATUS}})"
+            },
+            {
+                "function": "expect(wrapper.find(\".city-input\")).toHaveLength",
+                "content": "expect(wrapper.find(\".city-input\")).toHaveLength(1)"
+            },
+            {
+                "function": "expect",
+                "content": "expect(wrapper.find(\".city-input\"))"
+            },
+            {
+                "function": "wrapper.find",
+                "content": "wrapper.find(\".city-input\")"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should contain a change city button\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\"#change-city-btn\")).toHaveLength(1);\n  })"
+            },
+            {
+                "function": "render",
+                "content": "render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />)"
+            },
+            {
+                "function": "mockStore",
+                "content": "mockStore({ weatherStation: {status: STATUS}})"
+            },
+            {
+                "function": "expect(wrapper.find(\"#change-city-btn\")).toHaveLength",
+                "content": "expect(wrapper.find(\"#change-city-btn\")).toHaveLength(1)"
+            },
+            {
+                "function": "expect",
+                "content": "expect(wrapper.find(\"#change-city-btn\"))"
+            },
+            {
+                "function": "wrapper.find",
+                "content": "wrapper.find(\"#change-city-btn\")"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should contain app heading\", () => {\n    const wrapper = mount(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    const heading = <h1 className=\"heading\">5-Day Weather Forecast</h1>;\n    expect(wrapper.contains(heading)).toEqual(true);\n  })"
+            },
+            {
+                "function": "mount",
+                "content": "mount(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />)"
+            },
+            {
+                "function": "mockStore",
+                "content": "mockStore({ weatherStation: {status: STATUS}})"
+            },
+            {
+                "function": "expect(wrapper.contains(heading)).toEqual",
+                "content": "expect(wrapper.contains(heading)).toEqual(true)"
+            },
+            {
+                "function": "expect",
+                "content": "expect(wrapper.contains(heading))"
+            },
+            {
+                "function": "wrapper.contains",
+                "content": "wrapper.contains(heading)"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should receive city prop\", () => {\n    const wrapper = shallow(<Dashboard city=\"london\" store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.prop(\"city\")).toBeDefined();\n  })"
+            },
+            {
+                "function": "shallow",
+                "content": "shallow(<Dashboard city=\"london\" store={mockStore({ weatherStation: {status: STATUS}})} />)"
+            },
+            {
+                "function": "mockStore",
+                "content": "mockStore({ weatherStation: {status: STATUS}})"
+            },
+            {
+                "function": "expect(wrapper.prop(\"city\")).toBeDefined",
+                "content": "expect(wrapper.prop(\"city\")).toBeDefined()"
+            },
+            {
+                "function": "expect",
+                "content": "expect(wrapper.prop(\"city\"))"
+            },
+            {
+                "function": "wrapper.prop",
+                "content": "wrapper.prop(\"city\")"
+            }
+        ],
+        "arrow_functions": [
+            {
+                "function": "arrow_function",
+                "content": "() => {\n  it(\"renders an `.weather-dashboard`\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.hasClass(\"weather-dashboard\")).toBe(true);\n  });\n\n  it(\"should contain a input field\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\".city-input\")).toHaveLength(1);\n  });\n\n  it(\"should contain a change city button\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\"#change-city-btn\")).toHaveLength(1);\n  });\n\n  it(\"should contain app heading\", () => {\n    const wrapper = mount(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    const heading = <h1 className=\"heading\">5-Day Weather Forecast</h1>;\n    expect(wrapper.contains(heading)).toEqual(true);\n  });\n\n  it(\"should receive city prop\", () => {\n    const wrapper = shallow(<Dashboard city=\"london\" store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.prop(\"city\")).toBeDefined();\n  });\n}"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.hasClass(\"weather-dashboard\")).toBe(true);\n  }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\".city-input\")).toHaveLength(1);\n  }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\"#change-city-btn\")).toHaveLength(1);\n  }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    const wrapper = mount(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    const heading = <h1 className=\"heading\">5-Day Weather Forecast</h1>;\n    expect(wrapper.contains(heading)).toEqual(true);\n  }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    const wrapper = shallow(<Dashboard city=\"london\" store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.prop(\"city\")).toBeDefined();\n  }"
+            }
+        ],
+        "jsx_elements": [
+            {
+                "element": "jsx_element",
+                "content": "<h1 className=\"heading\">5-Day Weather Forecast</h1>"
+            }
+        ],
+        "imports_content": [
+            "import React from \"react\";",
+            "import { render, mount, shallow } from \"enzyme\";",
+            "import configureStore from \"redux-mock-store\";",
+            "import Dashboard from \"../../components/Dashboard\";"
+        ],
+        "exports_content": [],
+        "functions_content": [],
+        "function_calls_content": [
+            "configureStore()",
+            "describe(\"<Dashboard />\", () => {\n  it(\"renders an `.weather-dashboard`\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.hasClass(\"weather-dashboard\")).toBe(true);\n  });\n\n  it(\"should contain a input field\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\".city-input\")).toHaveLength(1);\n  });\n\n  it(\"should contain a change city button\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\"#change-city-btn\")).toHaveLength(1);\n  });\n\n  it(\"should contain app heading\", () => {\n    const wrapper = mount(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    const heading = <h1 className=\"heading\">5-Day Weather Forecast</h1>;\n    expect(wrapper.contains(heading)).toEqual(true);\n  });\n\n  it(\"should receive city prop\", () => {\n    const wrapper = shallow(<Dashboard city=\"london\" store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.prop(\"city\")).toBeDefined();\n  });\n})",
+            "it(\"renders an `.weather-dashboard`\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.hasClass(\"weather-dashboard\")).toBe(true);\n  })",
+            "render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />)",
+            "mockStore({ weatherStation: {status: STATUS}})",
+            "expect(wrapper.hasClass(\"weather-dashboard\")).toBe(true)",
+            "expect(wrapper.hasClass(\"weather-dashboard\"))",
+            "wrapper.hasClass(\"weather-dashboard\")",
+            "it(\"should contain a input field\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\".city-input\")).toHaveLength(1);\n  })",
+            "render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />)",
+            "mockStore({ weatherStation: {status: STATUS}})",
+            "expect(wrapper.find(\".city-input\")).toHaveLength(1)",
+            "expect(wrapper.find(\".city-input\"))",
+            "wrapper.find(\".city-input\")",
+            "it(\"should contain a change city button\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\"#change-city-btn\")).toHaveLength(1);\n  })",
+            "render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />)",
+            "mockStore({ weatherStation: {status: STATUS}})",
+            "expect(wrapper.find(\"#change-city-btn\")).toHaveLength(1)",
+            "expect(wrapper.find(\"#change-city-btn\"))",
+            "wrapper.find(\"#change-city-btn\")",
+            "it(\"should contain app heading\", () => {\n    const wrapper = mount(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    const heading = <h1 className=\"heading\">5-Day Weather Forecast</h1>;\n    expect(wrapper.contains(heading)).toEqual(true);\n  })",
+            "mount(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />)",
+            "mockStore({ weatherStation: {status: STATUS}})",
+            "expect(wrapper.contains(heading)).toEqual(true)",
+            "expect(wrapper.contains(heading))",
+            "wrapper.contains(heading)",
+            "it(\"should receive city prop\", () => {\n    const wrapper = shallow(<Dashboard city=\"london\" store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.prop(\"city\")).toBeDefined();\n  })",
+            "shallow(<Dashboard city=\"london\" store={mockStore({ weatherStation: {status: STATUS}})} />)",
+            "mockStore({ weatherStation: {status: STATUS}})",
+            "expect(wrapper.prop(\"city\")).toBeDefined()",
+            "expect(wrapper.prop(\"city\"))",
+            "wrapper.prop(\"city\")"
+        ],
+        "arrow_functions_content": [
+            "() => {\n  it(\"renders an `.weather-dashboard`\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.hasClass(\"weather-dashboard\")).toBe(true);\n  });\n\n  it(\"should contain a input field\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\".city-input\")).toHaveLength(1);\n  });\n\n  it(\"should contain a change city button\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\"#change-city-btn\")).toHaveLength(1);\n  });\n\n  it(\"should contain app heading\", () => {\n    const wrapper = mount(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    const heading = <h1 className=\"heading\">5-Day Weather Forecast</h1>;\n    expect(wrapper.contains(heading)).toEqual(true);\n  });\n\n  it(\"should receive city prop\", () => {\n    const wrapper = shallow(<Dashboard city=\"london\" store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.prop(\"city\")).toBeDefined();\n  });\n}",
+            "() => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.hasClass(\"weather-dashboard\")).toBe(true);\n  }",
+            "() => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\".city-input\")).toHaveLength(1);\n  }",
+            "() => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\"#change-city-btn\")).toHaveLength(1);\n  }",
+            "() => {\n    const wrapper = mount(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    const heading = <h1 className=\"heading\">5-Day Weather Forecast</h1>;\n    expect(wrapper.contains(heading)).toEqual(true);\n  }",
+            "() => {\n    const wrapper = shallow(<Dashboard city=\"london\" store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.prop(\"city\")).toBeDefined();\n  }"
+        ],
+        "jsx_content": [
+            "<h1 className=\"heading\">5-Day Weather Forecast</h1>"
+        ],
+        "code_content": "import React from \"react\";\nimport { render, mount, shallow } from \"enzyme\";\n\nimport configureStore from \"redux-mock-store\";\nconst mockStore = configureStore();\n\nimport Dashboard from \"../../components/Dashboard\";\nconst STATUS = \"success\";\n\ndescribe(\"<Dashboard />\", () => {\n  it(\"renders an `.weather-dashboard`\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.hasClass(\"weather-dashboard\")).toBe(true);\n  });\n\n  it(\"should contain a input field\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\".city-input\")).toHaveLength(1);\n  });\n\n  it(\"should contain a change city button\", () => {\n    const wrapper = render(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.find(\"#change-city-btn\")).toHaveLength(1);\n  });\n\n  it(\"should contain app heading\", () => {\n    const wrapper = mount(<Dashboard store={mockStore({ weatherStation: {status: STATUS}})} />);\n    const heading = <h1 className=\"heading\">5-Day Weather Forecast</h1>;\n    expect(wrapper.contains(heading)).toEqual(true);\n  });\n\n  it(\"should receive city prop\", () => {\n    const wrapper = shallow(<Dashboard city=\"london\" store={mockStore({ weatherStation: {status: STATUS}})} />);\n    expect(wrapper.prop(\"city\")).toBeDefined();\n  });\n});"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\test\\__tests__\\forecastTiles.js",
+        "imports": [
+            {
+                "module": "\"react\"",
+                "content": "import React from \"react\";"
+            },
+            {
+                "module": "\"enzyme\"",
+                "content": "import { render } from \"enzyme\";"
+            },
+            {
+                "module": "\"redux-mock-store\"",
+                "content": "import configureStore from \"redux-mock-store\";"
+            },
+            {
+                "module": "\"./data/forecast.json\"",
+                "content": "import data from \"./data/forecast.json\";"
+            },
+            {
+                "module": "\"../../components/ForecastTiles\"",
+                "content": "import ForecastTiles from \"../../components/ForecastTiles\";"
+            }
+        ],
+        "exports": [],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "configureStore",
+                "content": "configureStore()"
+            },
+            {
+                "function": "describe",
+                "content": "describe(\"<ForecastTiles />\", () => {\n  it(\"should render a forecast-tiles container div\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.hasClass(\"forecast-tiles\")).toBe(true);\n  });\n\n  it(\"should render five forecast tiles\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.children().length).toBe(5);\n  });\n})"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should render a forecast-tiles container div\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.hasClass(\"forecast-tiles\")).toBe(true);\n  })"
+            },
+            {
+                "function": "render",
+                "content": "render(<ForecastTiles store={mockStore()} forecasts={list}/>)"
+            },
+            {
+                "function": "mockStore",
+                "content": "mockStore()"
+            },
+            {
+                "function": "expect(wrapper.hasClass(\"forecast-tiles\")).toBe",
+                "content": "expect(wrapper.hasClass(\"forecast-tiles\")).toBe(true)"
+            },
+            {
+                "function": "expect",
+                "content": "expect(wrapper.hasClass(\"forecast-tiles\"))"
+            },
+            {
+                "function": "wrapper.hasClass",
+                "content": "wrapper.hasClass(\"forecast-tiles\")"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should render five forecast tiles\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.children().length).toBe(5);\n  })"
+            },
+            {
+                "function": "render",
+                "content": "render(<ForecastTiles store={mockStore()} forecasts={list}/>)"
+            },
+            {
+                "function": "mockStore",
+                "content": "mockStore()"
+            },
+            {
+                "function": "expect(wrapper.children().length).toBe",
+                "content": "expect(wrapper.children().length).toBe(5)"
+            },
+            {
+                "function": "expect",
+                "content": "expect(wrapper.children().length)"
+            },
+            {
+                "function": "wrapper.children",
+                "content": "wrapper.children()"
+            }
+        ],
+        "arrow_functions": [
+            {
+                "function": "arrow_function",
+                "content": "() => {\n  it(\"should render a forecast-tiles container div\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.hasClass(\"forecast-tiles\")).toBe(true);\n  });\n\n  it(\"should render five forecast tiles\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.children().length).toBe(5);\n  });\n}"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.hasClass(\"forecast-tiles\")).toBe(true);\n  }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.children().length).toBe(5);\n  }"
+            }
+        ],
+        "jsx_elements": [],
+        "imports_content": [
+            "import React from \"react\";",
+            "import { render } from \"enzyme\";",
+            "import configureStore from \"redux-mock-store\";",
+            "import data from \"./data/forecast.json\";",
+            "import ForecastTiles from \"../../components/ForecastTiles\";"
+        ],
+        "exports_content": [],
+        "functions_content": [],
+        "function_calls_content": [
+            "configureStore()",
+            "describe(\"<ForecastTiles />\", () => {\n  it(\"should render a forecast-tiles container div\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.hasClass(\"forecast-tiles\")).toBe(true);\n  });\n\n  it(\"should render five forecast tiles\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.children().length).toBe(5);\n  });\n})",
+            "it(\"should render a forecast-tiles container div\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.hasClass(\"forecast-tiles\")).toBe(true);\n  })",
+            "render(<ForecastTiles store={mockStore()} forecasts={list}/>)",
+            "mockStore()",
+            "expect(wrapper.hasClass(\"forecast-tiles\")).toBe(true)",
+            "expect(wrapper.hasClass(\"forecast-tiles\"))",
+            "wrapper.hasClass(\"forecast-tiles\")",
+            "it(\"should render five forecast tiles\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.children().length).toBe(5);\n  })",
+            "render(<ForecastTiles store={mockStore()} forecasts={list}/>)",
+            "mockStore()",
+            "expect(wrapper.children().length).toBe(5)",
+            "expect(wrapper.children().length)",
+            "wrapper.children()"
+        ],
+        "arrow_functions_content": [
+            "() => {\n  it(\"should render a forecast-tiles container div\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.hasClass(\"forecast-tiles\")).toBe(true);\n  });\n\n  it(\"should render five forecast tiles\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.children().length).toBe(5);\n  });\n}",
+            "() => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.hasClass(\"forecast-tiles\")).toBe(true);\n  }",
+            "() => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.children().length).toBe(5);\n  }"
+        ],
+        "jsx_content": [],
+        "code_content": "import React from \"react\";\nimport { render } from \"enzyme\";\n\nimport configureStore from \"redux-mock-store\";\nconst mockStore = configureStore();\n\nimport data from \"./data/forecast.json\";\nconst { list } = data.weatherStation.data;\n\nimport ForecastTiles from \"../../components/ForecastTiles\";\n\ndescribe(\"<ForecastTiles />\", () => {\n  it(\"should render a forecast-tiles container div\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.hasClass(\"forecast-tiles\")).toBe(true);\n  });\n\n  it(\"should render five forecast tiles\", () => {\n    const wrapper = render(<ForecastTiles store={mockStore()} forecasts={list}/>);\n    expect(wrapper.children().length).toBe(5);\n  });\n});"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\test\\__tests__\\testAsyncActions.js",
+        "imports": [
+            {
+                "module": "\"redux-mock-store\"",
+                "content": "import configureStore from \"redux-mock-store\";"
+            },
+            {
+                "module": "\"../../constants/ActionTypes\"",
+                "content": "import { FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED } from \"../../constants/ActionTypes\";"
+            },
+            {
+                "module": "\"redux-thunk\"",
+                "content": "import thunk from \"redux-thunk\";"
+            },
+            {
+                "module": "\"../../actions/weatherStation\"",
+                "content": "import { fetchData } from \"../../actions/weatherStation\";"
+            }
+        ],
+        "exports": [],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "require(\"es6-promise\").polyfill",
+                "content": "require(\"es6-promise\").polyfill()"
+            },
+            {
+                "function": "require",
+                "content": "require(\"es6-promise\")"
+            },
+            {
+                "function": "require",
+                "content": "require(\"isomorphic-fetch\")"
+            },
+            {
+                "function": "configureStore",
+                "content": "configureStore(middlewares)"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should execute fetchData and return the required action type\", () => {\n  const store = mockStore({});\n  return store.dispatch(fetchData(\"london\"))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_FULFILLED);\n    });\n})"
+            },
+            {
+                "function": "mockStore",
+                "content": "mockStore({})"
+            },
+            {
+                "function": "store.dispatch(fetchData(\"london\"))\n    .then",
+                "content": "store.dispatch(fetchData(\"london\"))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_FULFILLED);\n    })"
+            },
+            {
+                "function": "store.dispatch",
+                "content": "store.dispatch(fetchData(\"london\"))"
+            },
+            {
+                "function": "fetchData",
+                "content": "fetchData(\"london\")"
+            },
+            {
+                "function": "store.getActions",
+                "content": "store.getActions()"
+            },
+            {
+                "function": "expect(actions[0].type).toEqual",
+                "content": "expect(actions[0].type).toEqual(FETCH_DATA_FULFILLED)"
+            },
+            {
+                "function": "expect",
+                "content": "expect(actions[0].type)"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should reject the request if no city is being passed\", () => {\n  const store = mockStore({});\n  return store.dispatch(fetchData(null))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_REJECTED);\n    });\n})"
+            },
+            {
+                "function": "mockStore",
+                "content": "mockStore({})"
+            },
+            {
+                "function": "store.dispatch(fetchData(null))\n    .then",
+                "content": "store.dispatch(fetchData(null))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_REJECTED);\n    })"
+            },
+            {
+                "function": "store.dispatch",
+                "content": "store.dispatch(fetchData(null))"
+            },
+            {
+                "function": "fetchData",
+                "content": "fetchData(null)"
+            },
+            {
+                "function": "store.getActions",
+                "content": "store.getActions()"
+            },
+            {
+                "function": "expect(actions[0].type).toEqual",
+                "content": "expect(actions[0].type).toEqual(FETCH_DATA_REJECTED)"
+            },
+            {
+                "function": "expect",
+                "content": "expect(actions[0].type)"
+            }
+        ],
+        "arrow_functions": [
+            {
+                "function": "arrow_function",
+                "content": "() => {\n  const store = mockStore({});\n  return store.dispatch(fetchData(\"london\"))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_FULFILLED);\n    });\n}"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_FULFILLED);\n    }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n  const store = mockStore({});\n  return store.dispatch(fetchData(null))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_REJECTED);\n    });\n}"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_REJECTED);\n    }"
+            }
+        ],
+        "jsx_elements": [],
+        "imports_content": [
+            "import configureStore from \"redux-mock-store\";",
+            "import { FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED } from \"../../constants/ActionTypes\";",
+            "import thunk from \"redux-thunk\";",
+            "import { fetchData } from \"../../actions/weatherStation\";"
+        ],
+        "exports_content": [],
+        "functions_content": [],
+        "function_calls_content": [
+            "require(\"es6-promise\").polyfill()",
+            "require(\"es6-promise\")",
+            "require(\"isomorphic-fetch\")",
+            "configureStore(middlewares)",
+            "it(\"should execute fetchData and return the required action type\", () => {\n  const store = mockStore({});\n  return store.dispatch(fetchData(\"london\"))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_FULFILLED);\n    });\n})",
+            "mockStore({})",
+            "store.dispatch(fetchData(\"london\"))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_FULFILLED);\n    })",
+            "store.dispatch(fetchData(\"london\"))",
+            "fetchData(\"london\")",
+            "store.getActions()",
+            "expect(actions[0].type).toEqual(FETCH_DATA_FULFILLED)",
+            "expect(actions[0].type)",
+            "it(\"should reject the request if no city is being passed\", () => {\n  const store = mockStore({});\n  return store.dispatch(fetchData(null))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_REJECTED);\n    });\n})",
+            "mockStore({})",
+            "store.dispatch(fetchData(null))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_REJECTED);\n    })",
+            "store.dispatch(fetchData(null))",
+            "fetchData(null)",
+            "store.getActions()",
+            "expect(actions[0].type).toEqual(FETCH_DATA_REJECTED)",
+            "expect(actions[0].type)"
+        ],
+        "arrow_functions_content": [
+            "() => {\n  const store = mockStore({});\n  return store.dispatch(fetchData(\"london\"))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_FULFILLED);\n    });\n}",
+            "() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_FULFILLED);\n    }",
+            "() => {\n  const store = mockStore({});\n  return store.dispatch(fetchData(null))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_REJECTED);\n    });\n}",
+            "() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_REJECTED);\n    }"
+        ],
+        "jsx_content": [],
+        "code_content": "import configureStore from \"redux-mock-store\";\n\nimport { FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED } from \"../../constants/ActionTypes\";\n\nimport thunk from \"redux-thunk\";\nrequire(\"es6-promise\").polyfill();\nrequire(\"isomorphic-fetch\");\n\nimport { fetchData } from \"../../actions/weatherStation\";\n\nconst middlewares = [thunk];\nconst mockStore = configureStore(middlewares);\n\nit(\"should execute fetchData and return the required action type\", () => {\n  const store = mockStore({});\n  return store.dispatch(fetchData(\"london\"))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_FULFILLED);\n    });\n});\n\nit(\"should reject the request if no city is being passed\", () => {\n  const store = mockStore({});\n  return store.dispatch(fetchData(null))\n    .then(() => {\n      const actions = store.getActions();\n\n      // Expected action type from the action creator\n      expect(actions[0].type).toEqual(FETCH_DATA_REJECTED);\n    });\n});"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\test\\__tests__\\testReducers.js",
+        "imports": [
+            {
+                "module": "\"react\"",
+                "content": "import React from \"react\";"
+            },
+            {
+                "module": "\"../../actions/weatherStation\"",
+                "content": "import * as actions from \"../../actions/weatherStation\";"
+            },
+            {
+                "module": "\"../../reducers\"",
+                "content": "import reducer from \"../../reducers\";"
+            },
+            {
+                "module": "\"../../constants/ActionTypes\"",
+                "content": "import { FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED } from \"../../constants/ActionTypes\";"
+            },
+            {
+                "module": "\"./data/forecast.json\"",
+                "content": "import mockData from \"./data/forecast.json\";"
+            }
+        ],
+        "exports": [],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "describe",
+                "content": "describe(\"data reducer\", () => {\n  \n  it(\"should return initial state\", () => {\n    expect(reducer(undefined, {})).toEqual({\"weatherStation\": {\"data\": null, \"status\": null}});\n  });\n\n  it(\"should handle FETCH_DATA_FULFILLED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_FULFILLED,\n      payload: mockData.weatherStation.data\n    };\n\n    expect(reducer({}, startFetch)).toEqual(mockData);\n  });\n\n  it(\"should handle FETCH_DATA_REJECTED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_REJECTED,\n      payload: {}\n    };\n\n    expect(reducer({}, startFetch)).toEqual({\"weatherStation\": {\"data\": null, \"status\": \"failed\"}});\n  });\n})"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should return initial state\", () => {\n    expect(reducer(undefined, {})).toEqual({\"weatherStation\": {\"data\": null, \"status\": null}});\n  })"
+            },
+            {
+                "function": "expect(reducer(undefined, {})).toEqual",
+                "content": "expect(reducer(undefined, {})).toEqual({\"weatherStation\": {\"data\": null, \"status\": null}})"
+            },
+            {
+                "function": "expect",
+                "content": "expect(reducer(undefined, {}))"
+            },
+            {
+                "function": "reducer",
+                "content": "reducer(undefined, {})"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should handle FETCH_DATA_FULFILLED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_FULFILLED,\n      payload: mockData.weatherStation.data\n    };\n\n    expect(reducer({}, startFetch)).toEqual(mockData);\n  })"
+            },
+            {
+                "function": "expect(reducer({}, startFetch)).toEqual",
+                "content": "expect(reducer({}, startFetch)).toEqual(mockData)"
+            },
+            {
+                "function": "expect",
+                "content": "expect(reducer({}, startFetch))"
+            },
+            {
+                "function": "reducer",
+                "content": "reducer({}, startFetch)"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should handle FETCH_DATA_REJECTED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_REJECTED,\n      payload: {}\n    };\n\n    expect(reducer({}, startFetch)).toEqual({\"weatherStation\": {\"data\": null, \"status\": \"failed\"}});\n  })"
+            },
+            {
+                "function": "expect(reducer({}, startFetch)).toEqual",
+                "content": "expect(reducer({}, startFetch)).toEqual({\"weatherStation\": {\"data\": null, \"status\": \"failed\"}})"
+            },
+            {
+                "function": "expect",
+                "content": "expect(reducer({}, startFetch))"
+            },
+            {
+                "function": "reducer",
+                "content": "reducer({}, startFetch)"
+            }
+        ],
+        "arrow_functions": [
+            {
+                "function": "arrow_function",
+                "content": "() => {\n  \n  it(\"should return initial state\", () => {\n    expect(reducer(undefined, {})).toEqual({\"weatherStation\": {\"data\": null, \"status\": null}});\n  });\n\n  it(\"should handle FETCH_DATA_FULFILLED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_FULFILLED,\n      payload: mockData.weatherStation.data\n    };\n\n    expect(reducer({}, startFetch)).toEqual(mockData);\n  });\n\n  it(\"should handle FETCH_DATA_REJECTED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_REJECTED,\n      payload: {}\n    };\n\n    expect(reducer({}, startFetch)).toEqual({\"weatherStation\": {\"data\": null, \"status\": \"failed\"}});\n  });\n}"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    expect(reducer(undefined, {})).toEqual({\"weatherStation\": {\"data\": null, \"status\": null}});\n  }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    const startFetch = {\n      type: FETCH_DATA_FULFILLED,\n      payload: mockData.weatherStation.data\n    };\n\n    expect(reducer({}, startFetch)).toEqual(mockData);\n  }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    const startFetch = {\n      type: FETCH_DATA_REJECTED,\n      payload: {}\n    };\n\n    expect(reducer({}, startFetch)).toEqual({\"weatherStation\": {\"data\": null, \"status\": \"failed\"}});\n  }"
+            }
+        ],
+        "jsx_elements": [],
+        "imports_content": [
+            "import React from \"react\";",
+            "import * as actions from \"../../actions/weatherStation\";",
+            "import reducer from \"../../reducers\";",
+            "import { FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED } from \"../../constants/ActionTypes\";",
+            "import mockData from \"./data/forecast.json\";"
+        ],
+        "exports_content": [],
+        "functions_content": [],
+        "function_calls_content": [
+            "describe(\"data reducer\", () => {\n  \n  it(\"should return initial state\", () => {\n    expect(reducer(undefined, {})).toEqual({\"weatherStation\": {\"data\": null, \"status\": null}});\n  });\n\n  it(\"should handle FETCH_DATA_FULFILLED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_FULFILLED,\n      payload: mockData.weatherStation.data\n    };\n\n    expect(reducer({}, startFetch)).toEqual(mockData);\n  });\n\n  it(\"should handle FETCH_DATA_REJECTED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_REJECTED,\n      payload: {}\n    };\n\n    expect(reducer({}, startFetch)).toEqual({\"weatherStation\": {\"data\": null, \"status\": \"failed\"}});\n  });\n})",
+            "it(\"should return initial state\", () => {\n    expect(reducer(undefined, {})).toEqual({\"weatherStation\": {\"data\": null, \"status\": null}});\n  })",
+            "expect(reducer(undefined, {})).toEqual({\"weatherStation\": {\"data\": null, \"status\": null}})",
+            "expect(reducer(undefined, {}))",
+            "reducer(undefined, {})",
+            "it(\"should handle FETCH_DATA_FULFILLED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_FULFILLED,\n      payload: mockData.weatherStation.data\n    };\n\n    expect(reducer({}, startFetch)).toEqual(mockData);\n  })",
+            "expect(reducer({}, startFetch)).toEqual(mockData)",
+            "expect(reducer({}, startFetch))",
+            "reducer({}, startFetch)",
+            "it(\"should handle FETCH_DATA_REJECTED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_REJECTED,\n      payload: {}\n    };\n\n    expect(reducer({}, startFetch)).toEqual({\"weatherStation\": {\"data\": null, \"status\": \"failed\"}});\n  })",
+            "expect(reducer({}, startFetch)).toEqual({\"weatherStation\": {\"data\": null, \"status\": \"failed\"}})",
+            "expect(reducer({}, startFetch))",
+            "reducer({}, startFetch)"
+        ],
+        "arrow_functions_content": [
+            "() => {\n  \n  it(\"should return initial state\", () => {\n    expect(reducer(undefined, {})).toEqual({\"weatherStation\": {\"data\": null, \"status\": null}});\n  });\n\n  it(\"should handle FETCH_DATA_FULFILLED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_FULFILLED,\n      payload: mockData.weatherStation.data\n    };\n\n    expect(reducer({}, startFetch)).toEqual(mockData);\n  });\n\n  it(\"should handle FETCH_DATA_REJECTED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_REJECTED,\n      payload: {}\n    };\n\n    expect(reducer({}, startFetch)).toEqual({\"weatherStation\": {\"data\": null, \"status\": \"failed\"}});\n  });\n}",
+            "() => {\n    expect(reducer(undefined, {})).toEqual({\"weatherStation\": {\"data\": null, \"status\": null}});\n  }",
+            "() => {\n    const startFetch = {\n      type: FETCH_DATA_FULFILLED,\n      payload: mockData.weatherStation.data\n    };\n\n    expect(reducer({}, startFetch)).toEqual(mockData);\n  }",
+            "() => {\n    const startFetch = {\n      type: FETCH_DATA_REJECTED,\n      payload: {}\n    };\n\n    expect(reducer({}, startFetch)).toEqual({\"weatherStation\": {\"data\": null, \"status\": \"failed\"}});\n  }"
+        ],
+        "jsx_content": [],
+        "code_content": "import React from \"react\";\n\nimport * as actions from \"../../actions/weatherStation\";\nimport reducer from \"../../reducers\";\n\nimport { FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED } from \"../../constants/ActionTypes\";\n\nimport mockData from \"./data/forecast.json\";\n\ndescribe(\"data reducer\", () => {\n  \n  it(\"should return initial state\", () => {\n    expect(reducer(undefined, {})).toEqual({\"weatherStation\": {\"data\": null, \"status\": null}});\n  });\n\n  it(\"should handle FETCH_DATA_FULFILLED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_FULFILLED,\n      payload: mockData.weatherStation.data\n    };\n\n    expect(reducer({}, startFetch)).toEqual(mockData);\n  });\n\n  it(\"should handle FETCH_DATA_REJECTED\", () => {\n    const startFetch = {\n      type: FETCH_DATA_REJECTED,\n      payload: {}\n    };\n\n    expect(reducer({}, startFetch)).toEqual({\"weatherStation\": {\"data\": null, \"status\": \"failed\"}});\n  });\n});\n\n"
+    },
+    {
+        "file": "./testcodebases/react-weather-forecast-master\\src\\test\\__tests__\\weatherForecast.js",
+        "imports": [
+            {
+                "module": "\"react\"",
+                "content": "import React from \"react\";"
+            },
+            {
+                "module": "\"enzyme\"",
+                "content": "import { shallow } from \"enzyme\";"
+            },
+            {
+                "module": "\"redux-mock-store\"",
+                "content": "import configureStore from \"redux-mock-store\";"
+            },
+            {
+                "module": "\"../../components/WeatherForecast\"",
+                "content": "import WeatherForecast from \"../../components/WeatherForecast\";"
+            },
+            {
+                "module": "\"../../components/Dashboard\"",
+                "content": "import Dashboard from \"../../components/Dashboard\";"
+            },
+            {
+                "module": "\"./data/forecast.json\"",
+                "content": "import data from \"./data/forecast.json\";"
+            }
+        ],
+        "exports": [],
+        "functions": [],
+        "function_calls": [
+            {
+                "function": "configureStore",
+                "content": "configureStore()"
+            },
+            {
+                "function": "describe",
+                "content": "describe(\"<WeatherForecast />\", () => {\n  it(\"should render a div with `.weather-forecast-wrapper` class\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.hasClass(\"weather-forecast-wrapper\")).toBe(true);\n  });\n\n  it(\"should contain a dashboard\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.find(Dashboard)).toHaveLength(1);\n  });\n})"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should render a div with `.weather-forecast-wrapper` class\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.hasClass(\"weather-forecast-wrapper\")).toBe(true);\n  })"
+            },
+            {
+                "function": "shallow",
+                "content": "shallow(<WeatherForecast data={data.weatherStation.data} />)"
+            },
+            {
+                "function": "expect(wrapper.hasClass(\"weather-forecast-wrapper\")).toBe",
+                "content": "expect(wrapper.hasClass(\"weather-forecast-wrapper\")).toBe(true)"
+            },
+            {
+                "function": "expect",
+                "content": "expect(wrapper.hasClass(\"weather-forecast-wrapper\"))"
+            },
+            {
+                "function": "wrapper.hasClass",
+                "content": "wrapper.hasClass(\"weather-forecast-wrapper\")"
+            },
+            {
+                "function": "it",
+                "content": "it(\"should contain a dashboard\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.find(Dashboard)).toHaveLength(1);\n  })"
+            },
+            {
+                "function": "shallow",
+                "content": "shallow(<WeatherForecast data={data.weatherStation.data} />)"
+            },
+            {
+                "function": "expect(wrapper.find(Dashboard)).toHaveLength",
+                "content": "expect(wrapper.find(Dashboard)).toHaveLength(1)"
+            },
+            {
+                "function": "expect",
+                "content": "expect(wrapper.find(Dashboard))"
+            },
+            {
+                "function": "wrapper.find",
+                "content": "wrapper.find(Dashboard)"
+            }
+        ],
+        "arrow_functions": [
+            {
+                "function": "arrow_function",
+                "content": "() => {\n  it(\"should render a div with `.weather-forecast-wrapper` class\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.hasClass(\"weather-forecast-wrapper\")).toBe(true);\n  });\n\n  it(\"should contain a dashboard\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.find(Dashboard)).toHaveLength(1);\n  });\n}"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.hasClass(\"weather-forecast-wrapper\")).toBe(true);\n  }"
+            },
+            {
+                "function": "arrow_function",
+                "content": "() => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.find(Dashboard)).toHaveLength(1);\n  }"
+            }
+        ],
+        "jsx_elements": [],
+        "imports_content": [
+            "import React from \"react\";",
+            "import { shallow } from \"enzyme\";",
+            "import configureStore from \"redux-mock-store\";",
+            "import WeatherForecast from \"../../components/WeatherForecast\";",
+            "import Dashboard from \"../../components/Dashboard\";",
+            "import data from \"./data/forecast.json\";"
+        ],
+        "exports_content": [],
+        "functions_content": [],
+        "function_calls_content": [
+            "configureStore()",
+            "describe(\"<WeatherForecast />\", () => {\n  it(\"should render a div with `.weather-forecast-wrapper` class\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.hasClass(\"weather-forecast-wrapper\")).toBe(true);\n  });\n\n  it(\"should contain a dashboard\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.find(Dashboard)).toHaveLength(1);\n  });\n})",
+            "it(\"should render a div with `.weather-forecast-wrapper` class\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.hasClass(\"weather-forecast-wrapper\")).toBe(true);\n  })",
+            "shallow(<WeatherForecast data={data.weatherStation.data} />)",
+            "expect(wrapper.hasClass(\"weather-forecast-wrapper\")).toBe(true)",
+            "expect(wrapper.hasClass(\"weather-forecast-wrapper\"))",
+            "wrapper.hasClass(\"weather-forecast-wrapper\")",
+            "it(\"should contain a dashboard\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.find(Dashboard)).toHaveLength(1);\n  })",
+            "shallow(<WeatherForecast data={data.weatherStation.data} />)",
+            "expect(wrapper.find(Dashboard)).toHaveLength(1)",
+            "expect(wrapper.find(Dashboard))",
+            "wrapper.find(Dashboard)"
+        ],
+        "arrow_functions_content": [
+            "() => {\n  it(\"should render a div with `.weather-forecast-wrapper` class\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.hasClass(\"weather-forecast-wrapper\")).toBe(true);\n  });\n\n  it(\"should contain a dashboard\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.find(Dashboard)).toHaveLength(1);\n  });\n}",
+            "() => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.hasClass(\"weather-forecast-wrapper\")).toBe(true);\n  }",
+            "() => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.find(Dashboard)).toHaveLength(1);\n  }"
+        ],
+        "jsx_content": [],
+        "code_content": "import React from \"react\";\nimport { shallow } from \"enzyme\";\n\nimport configureStore from \"redux-mock-store\";\nconst mockStore = configureStore();\n\nimport WeatherForecast from \"../../components/WeatherForecast\";\nimport Dashboard from \"../../components/Dashboard\";\n\nimport data from \"./data/forecast.json\";\n\ndescribe(\"<WeatherForecast />\", () => {\n  it(\"should render a div with `.weather-forecast-wrapper` class\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.hasClass(\"weather-forecast-wrapper\")).toBe(true);\n  });\n\n  it(\"should contain a dashboard\", () => {\n    const wrapper = shallow(<WeatherForecast data={data.weatherStation.data} />);\n    expect(wrapper.find(Dashboard)).toHaveLength(1);\n  });\n});"
+    }
+]
