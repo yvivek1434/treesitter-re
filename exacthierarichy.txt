@@ -105,3 +105,70 @@ for file in input_json.keys():
 
 # Step 4: Print the hierarchical JSON for each file
 print(json.dumps(separate_hierarchies, indent=4))
+
+----------------------------------------------------------------------------------------------------------
+
+dependency_map = defaultdict(list)
+file_functions = defaultdict(list)
+
+for file, entries in input_json.items():
+    for entry in entries:
+        # Map dependencies and functions
+        dependency_map[file].append({
+            "dependency_file": entry["code_file"],
+            "function_name": entry["name"]
+        })
+        file_functions[file].append(entry["name"])
+
+# Step 2: Function to build the hierarchical JSON data for each file
+def build_tree(file, visited):
+    if file in visited:
+        return {"functions": []}  # Prevent circular references and redundant visits
+
+    visited.add(file)
+    children = {}
+    used_functions = set(file_functions[file])  # Start with functions from the current file
+
+    # Traverse dependencies and collect functions from child files
+    for dep in dependency_map.get(file, []):
+        print(f"Visiting dependency: {dep['dependency_file']} for file: {file}")
+
+        # Skip visiting the same file again if it's already in the current path
+        if dep["dependency_file"] in visited:
+            continue
+
+        child_tree = build_tree(dep["dependency_file"], visited)
+
+        # Add functions from the child file to the used functions
+        used_functions.update(child_tree.get("functions", []))
+
+        children[dep["dependency_file"]] = child_tree
+
+    visited.remove(file)
+
+    # If this is a leaf node, i.e., the file has no dependencies
+    if not children:
+        # Collect functions from this specific leaf node file
+        leaf_functions = []
+        for entry in input_json.get(file, []):
+            if entry["code_file"] == file:  # Match the code_file to the current file
+                leaf_functions.append(entry["name"])
+        return {
+            "functions": leaf_functions
+        }
+
+    return {
+        "dependencies": children,
+        "functions": list(used_functions)  # All functions used in this file, including dependencies
+    }
+
+# Step 3: Create separate hierarchical JSON for each file
+visited = set()
+separate_hierarchies = {}
+
+# Create the hierarchical JSON for each file separately
+for file in input_json.keys():
+    separate_hierarchies[file] = build_tree(file, visited)
+
+# Step 4: Print the hierarchical JSON for each file
+print(json.dumps(separate_hierarchies, indent=4))
