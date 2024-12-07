@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dependency Diagram Generator</title>
+    <style>
+        #mySvgId {
+            height: 90%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="classDiv"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.js"></script>
+    <script src="https://bumbu.me/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.js';
+
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: false,
+            maxTextSize: 90000
+        });
+
+        // JSON Data for Hierarchical Structure
+        const jsonData = {
+            "src\\modules\\MainApp.js": {
+                "dependencies": {
+                    "src\\modules\\CitySearchResults.js": {
+                        "functions": [
+                            "removeCitySearchResults"
+                        ]
+                    },
+                    "src\\modules\\ErrorMessage.js": {
+                        "functions": [
+                            "removeErrorMessage"
+                        ]
+                    }
+                }
+            }
+        };
+
+        // Convert the JSON Data to Mermaid Syntax
+        const convertToMermaidSyntax = (data) => {
+            let diagram = 'graph TD\n';  // Mermaid syntax for flowchart
+
+            // Loop through the data to create nodes and links
+            for (let file in data) {
+                let dependencies = data[file].dependencies;
+                // Loop through the dependencies of each file
+                for (let dep in dependencies) {
+                    // Create edges between files, and show the functions being called
+                    diagram += `${file.replace(/\\/g, '\\\\')} -->|${dependencies[dep].functions.join(', ')}| ${dep.replace(/\\/g, '\\\\')}\n`;
+                }
+            }
+            return diagram;
+        };
+
+        // Generate Mermaid Diagram Syntax from JSON Data
+        const diagramSyntax = convertToMermaidSyntax(jsonData);
+
+        // Function to draw the diagram
+        const drawDiagram = async function () {
+            const element = document.querySelector('#classDiv');
+
+            // Render the diagram using Mermaid
+            const { svg } = await mermaid.render('mySvgId', diagramSyntax);
+
+            // Insert the rendered SVG into the DOM
+            element.innerHTML = svg.replace(/max-width:\d+px;/i, '');
+
+            // Set up pan/zoom functionality
+            let doPan = false;
+            let mousepos;
+            const eventsHandler = {
+                mouseDownHandler: function (ev) {
+                    if (ev.target.className.baseVal === "class") {
+                        doPan = true;
+                        mousepos = { x: ev.clientX, y: ev.clientY };
+                    }
+                },
+                mouseMoveHandler: function (ev) {
+                    if (doPan) {
+                        panZoom.panBy({ x: ev.clientX - mousepos.x, y: ev.clientY - mousepos.y });
+                        mousepos = { x: ev.clientX, y: ev.clientY };
+                        window.getSelection().removeAllRanges();  // Prevent text selection during pan
+                    }
+                },
+                mouseUpHandler: function () {
+                    doPan = false;
+                },
+                init: function (options) {
+                    options.svgElement.addEventListener('mousedown', this.mouseDownHandler, false);
+                    options.svgElement.addEventListener('mousemove', this.mouseMoveHandler, false);
+                    options.svgElement.addEventListener('mouseup', this.mouseUpHandler, false);
+                },
+                destroy: function (options) {
+                    options.svgElement.removeEventListener('mousedown', this.mouseDownHandler, false);
+                    options.svgElement.removeEventListener('mousemove', this.mouseMoveHandler, false);
+                    options.svgElement.removeEventListener('mouseup', this.mouseUpHandler, false);
+                }
+            };
+
+            // Initialize pan and zoom functionality
+            const panZoom = svgPanZoom('#mySvgId', {
+                zoomEnabled: true,
+                controlIconsEnabled: true,
+                fit: 1,
+                center: 1,
+                customEventsHandler: eventsHandler
+            });
+        };
+
+        // Call the draw diagram function
+        await drawDiagram();
+    </script>
+
+</body>
+</html>
