@@ -332,3 +332,102 @@ if __name__ == "__main__":
     #     json.dump(dependency_tree_json, json_file, indent=4)
     # with open("combined_dependency_tree.json", "w") as json_file:
     #     json.dump(combined_dependency_tree, json_file, indent=4)
+
+---------------------------------------------------------------------------------------------------------
+import json
+from collections import defaultdict
+
+# Example JSON input
+input_json = {
+    "src\\modules\\CurrentWeatherDetails.js": [
+        {
+            "code_file": "src\\utils\\getTempType.js",
+            "type": "function",
+            "name": "getTempType",
+            "code_content": "export default function getTempType(value) {\n if (value) setToLocalStorage('tempTyp",
+            "description": "The 'getTempType` function is exported as the default function from the getTempType.j",
+            "vulnerability": "The function relies on local storage, which can be manipulated by the client, potent"
+        },
+        {
+            "code_file": "src\\utils\\getTempType.js",
+            "type": "function",
+            "name": "getLocalStorage",
+            "code_content": "import getLocalStorage from './getLocalStorage';",
+            "description": "The 'getLocalStorage function is imported from the 'getLocalStorage.js' file. It is u",
+            "vulnerability": "The function's implementati"
+        }
+    ],
+    "src\\index.js": [
+        {
+            "code_file": "src\\App.js",
+            "type": "class",
+            "name": "App",
+            "code_content": "class App { constructor() { this.header = new Header(); this.footer = new Footer();",
+            "description": "The `App' class is the main class imported and instantiated in the 'src\\index.js f",
+            "vulnerability": "No direct vulnerabilities identified in the App` class instantiation."
+        },
+        {
+            "code_file": "src\\App.js",
+            "type": "method",
+            "name": "renderApp",
+            "code_content": "renderApp() { this.header.renderPageLoadHeader(\"#app\"); this.renderMain('#app'); t",
+            "description": "The 'renderApp' method is responsible for rendering the initial structure of the ap",
+            "vulnerability": "No direct vulnerabilities identified in the renderApp method."
+        }
+    ]
+}
+
+# Step 1: Build a mapping of file dependencies and functions
+dependency_map = defaultdict(list)
+file_functions = defaultdict(list)
+
+# Store functions for each file
+for file, entries in input_json.items():
+    for entry in entries:
+        dependency_map[file].append({
+            "dependency_file": entry["code_file"],
+            "function_name": entry["name"]
+        })
+        file_functions[file].append(entry["name"])
+
+# Step 2: Function to build the hierarchical JSON data for each file
+def build_tree(file, visited):
+    if file in visited:
+        return {"functions": []}  # Prevent circular references
+
+    visited.add(file)
+    children = {}
+    used_functions = set(file_functions[file])  # Start with functions from the current file
+
+    for dep in dependency_map.get(file, []):
+        child_tree = build_tree(dep["dependency_file"], visited)
+
+        # Ensure the functions from the child file are included in the parent file's function list
+        used_functions.update(child_tree.get("functions", []))
+
+        children[dep["dependency_file"]] = child_tree
+
+    visited.remove(file)
+
+    # If there are no children (leaf node), return the list of functions in the current file
+    if not children:
+        return {
+            "functions": list(used_functions)  # All functions from this leaf file
+        }
+
+    return {
+        "dependencies": children,
+        "functions": list(used_functions)  # All functions used in this file, including dependencies
+    }
+
+# Step 3: Create separate hierarchical JSON for each file
+visited = set()
+separate_hierarchies = {}
+
+# Create the hierarchical JSON for each file separately
+for file in input_json.keys():
+    separate_hierarchies[file] = build_tree(file, visited)
+
+# Step 4: Print the hierarchical JSON for each file
+print(json.dumps(separate_hierarchies, indent=4))
+
