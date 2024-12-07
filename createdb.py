@@ -165,3 +165,91 @@ tree = {file: build_tree(file, visited) for file in input_json.keys()}
 
 # Step 4: Print the hierarchical JSON
 print(json.dumps(tree, indent=4))
+-------------------------------------------------------------------------------------------
+
+import json
+from collections import defaultdict
+
+# Example JSON input
+input_json = {
+    "src\\modules\\CurrentWeatherDetails.js": [
+        {
+            "code_file": "src\\utils\\getTempType.js",
+            "type": "function",
+            "name": "getTempType",
+            "code_content": "export default function getTempType(value) {\n if (value) setToLocalStorage('tempTyp",
+            "description": "The 'getTempType` function is exported as the default function from the getTempType.j",
+            "vulnerability": "The function relies on local storage, which can be manipulated by the client, potent"
+        },
+        {
+            "code_file": "src\\utils\\getTempType.js",
+            "type": "function",
+            "name": "getLocalStorage",
+            "code_content": "import getLocalStorage from './getLocalStorage';",
+            "description": "The 'getLocalStorage function is imported from the 'getLocalStorage.js' file. It is u",
+            "vulnerability": "The function's implementati"
+        }
+    ],
+    "src\\index.js": [
+        {
+            "code_file": "src\\App.js",
+            "type": "class",
+            "name": "App",
+            "code_content": "class App { constructor() { this.header = new Header(); this.footer = new Footer();",
+            "description": "The `App' class is the main class imported and instantiated in the 'src\\index.js f",
+            "vulnerability": "No direct vulnerabilities identified in the App` class instantiation."
+        },
+        {
+            "code_file": "src\\App.js",
+            "type": "method",
+            "name": "renderApp",
+            "code_content": "renderApp() { this.header.renderPageLoadHeader(\"#app\'); this.renderMain('#app'); t",
+            "description": "The 'renderApp' method is responsible for rendering the initial structure of the ap",
+            "vulnerability": "No direct vulnerabilities identified in the renderApp method."
+        }
+    ]
+}
+
+# Step 1: Build a mapping of file dependencies and functions
+dependency_map = defaultdict(list)
+for file, entries in input_json.items():
+    for entry in entries:
+        dependency_map[file].append({
+            "dependency_file": entry["code_file"],
+            "function_name": entry["name"]
+        })
+
+# Step 2: Function to build the hierarchical JSON data
+def build_tree(file, visited):
+    if file in visited:
+        return {"dependencies": {}, "used_functions": []}  # Prevent circular references
+
+    visited.add(file)
+    children = {}
+    used_functions = []
+
+    for dep in dependency_map.get(file, []):
+        child_tree = build_tree(dep["dependency_file"], visited)
+
+        if dep["function_name"] not in used_functions:
+            used_functions.append(dep["function_name"])
+
+        for func in child_tree.get("used_functions", []):
+            if func not in used_functions:
+                used_functions.append(func)
+
+        children[dep["dependency_file"]] = child_tree
+
+    visited.remove(file)
+
+    return {
+        "dependencies": children,
+        "used_functions": used_functions
+    }
+
+# Step 3: Create the hierarchical JSON for all root files
+visited = set()
+tree = {file: build_tree(file, visited) for file in input_json.keys()}
+
+# Step 4: Print the hierarchical JSON
+print(json.dumps(tree, indent=4))
