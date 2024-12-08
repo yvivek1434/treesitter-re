@@ -238,3 +238,118 @@ for file in input_json.keys():
 # Step 4: Print the hierarchical JSON for each file
 print(json.dumps(separate_hierarchies, indent=4))
 
+-----------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------
+import json
+from collections import defaultdict
+
+# Example Input JSON
+input_json = {
+    "src\\modules\\CurrentWeatherDetails.js": [
+        {
+            "code_file": "src\\utils\\getTempType.js",
+            "type": "function",
+            "name": "getTempType",
+            "code_content": "export default function getTempType(value) { if (value) setToLocalStorage('tempType', value); return getLocalStorage(); }",
+            "description": "The 'getTempType' function is exported as the default function from the 'getTempType.js' file.",
+            "vulnerability": "The function relies on local storage, which can be manipulated by the client."
+        },
+        {
+            "code_file": "src\\utils\\getTempType.js",
+            "type": "function",
+            "name": "getLocalStorage",
+            "code_content": "import getLocalStorage from './getLocalStorage';",
+            "description": "The 'getLocalStorage' function is imported from the 'getLocalStorage.js' file.",
+            "vulnerability": "The function's implementation is not provided."
+        },
+        {
+            "code_file": "src\\utils\\getTempType.js",
+            "type": "function",
+            "name": "setToLocalStorage",
+            "code_content": "import setToLocalStorage from './setToLocalStorage';",
+            "description": "The 'setToLocalStorage' function is imported from the 'setToLocalStorage.js' file.",
+            "vulnerability": "The function's implementation is not provided."
+        }
+    ],
+    "src\\modules\\ErrorMessage.js": [
+        {
+            "code_file": "src\\modules\\ErrorMessage.js",
+            "type": "function",
+            "name": "removeErrorMessage",
+            "code_content": "function removeErrorMessage() { ... }",
+            "description": "Function to remove error message",
+            "vulnerability": "Potential security risk if not properly validated."
+        },
+        {
+            "code_file": "src\\modules\\ErrorMessage.js",
+            "type": "function",
+            "name": "renderErrorMessage",
+            "code_content": "function renderErrorMessage() { ... }",
+            "description": "Function to render error message",
+            "vulnerability": "Potential security risk if not properly validated."
+        }
+    ]
+}
+
+# Step 1: Build a mapping of file dependencies and functions
+dependency_map = defaultdict(list)
+file_functions = defaultdict(list)
+
+for file, entries in input_json.items():
+    for entry in entries:
+        # Map dependencies and functions
+        dependency_map[file].append({
+            "dependency_file": entry["code_file"],
+            "function_name": entry["name"]
+        })
+        file_functions[file].append(entry["name"])
+
+# Step 2: Function to build the hierarchical JSON data for each file
+def build_tree(file, visited):
+    if file in visited:
+        return {"functions": []}  # Prevent circular references and redundant visits
+
+    visited.add(file)
+    children = {}
+    used_functions = set(file_functions[file])  # Start with functions from the current file
+
+    # Traverse dependencies and collect functions from child files
+    for dep in dependency_map.get(file, []):
+        dep_file = dep["dependency_file"]
+        dep_function = dep["function_name"]
+
+        # Skip visiting the same file again if it's already in the current path
+        if dep_file in visited:
+            continue
+
+        # Recursively build the tree for the dependency
+        child_tree = build_tree(dep_file, visited)
+
+        # Find the matching function in input_json and add it to the child's function list
+        for entry in input_json.get(file, []):
+            if entry["code_file"] == dep_file and entry["name"] == dep_function:
+                child_tree["functions"].append(dep_function)
+
+        # Ensure no duplicates in the function list
+        child_tree["functions"] = list(set(child_tree["functions"]))
+
+        children[dep_file] = child_tree
+
+    visited.remove(file)
+
+    return {
+        "dependencies": children,
+        "functions": list(used_functions)  # All functions used in this file
+    }
+
+# Step 3: Create separate hierarchical JSON for each file
+visited = set()
+separate_hierarchies = {}
+
+# Create the hierarchical JSON for each file separately
+for file in input_json.keys():
+    separate_hierarchies[file] = build_tree(file, visited)
+
+# Step 4: Print the hierarchical JSON for each file
+print(json.dumps(separate_hierarchies, indent=4))
+
